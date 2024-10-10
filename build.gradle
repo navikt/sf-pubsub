@@ -72,7 +72,7 @@ dependencies {
     implementation 'org.eclipse.jetty:jetty-client:11.0.15'
 
     // Jetty HTTP proxy (required for HttpProxy)
-    implementation 'org.eclipse.jetty:jetty-http:11.0.15'
+    implementation 'org.eclipse.jetty:jetty-http:11.0.16'
 
     implementation 'org.yaml:snakeyaml:1.21'
 
