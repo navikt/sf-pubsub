@@ -42,7 +42,7 @@ class PubSubClient(
     private val log = KotlinLogging.logger { }
 
     private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
-        .useTransportSecurity().nameResolverFactory(DnsNameResolverProvider()).build()
+        .useTransportSecurity().nameResolverFactory(DnsNameResolverProvider()).defaultLoadBalancingPolicy("pick_first").build()
 
     private val credentials = SalesforceCallCredentials()
 
