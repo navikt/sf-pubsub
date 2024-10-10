@@ -59,6 +59,7 @@ dependencies {
     //implementation 'com.salesforce.pubsub:pubsub-api-client:1.0.0' // Example version, check latest
     //implementation 'io.grpc:grpc-netty-shaded:1.42.0'  // For gRPC
     implementation 'io.grpc:grpc-core:1.68.0'
+    implementation 'io.grpc:grpc-api:1.68.0'
     implementation 'io.grpc:grpc-netty:1.68.0'
     implementation 'io.grpc:grpc-protobuf:1.68.0'
     implementation 'io.grpc:grpc-stub:1.68.0'
