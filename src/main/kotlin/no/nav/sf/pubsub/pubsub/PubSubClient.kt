@@ -9,11 +9,14 @@ import com.salesforce.eventbus.protobuf.ReplayPreset
 import com.salesforce.eventbus.protobuf.SchemaRequest
 import com.salesforce.eventbus.protobuf.TopicInfo
 import com.salesforce.eventbus.protobuf.TopicRequest
+import io.grpc.LoadBalancerRegistry
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
+import io.grpc.NameResolverRegistry
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.internal.DnsNameResolverProvider
+import io.grpc.internal.PickFirstLoadBalancerProvider
 import io.grpc.stub.StreamObserver
 import mu.KotlinLogging
 import org.apache.avro.Schema
@@ -41,16 +44,15 @@ class PubSubClient(
 ) {
     private val log = KotlinLogging.logger { }
 
-    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
-        .useTransportSecurity().nameResolverFactory(DnsNameResolverProvider()).defaultLoadBalancingPolicy("pick_first").build()
+    private val channel: ManagedChannel
 
     private val credentials = SalesforceCallCredentials()
 
-    private val pubSubStub: PubSubGrpc.PubSubStub = PubSubGrpc.newStub(channel).withCallCredentials(credentials)
+    private val pubSubStub: PubSubGrpc.PubSubStub
 
-    private val pubSubBlockingStub: PubSubGrpc.PubSubBlockingStub = PubSubGrpc.newBlockingStub(channel).withCallCredentials(credentials)
+    private val pubSubBlockingStub: PubSubGrpc.PubSubBlockingStub
 
-    private val topicInfo: TopicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
+    private val topicInfo: TopicInfo
 
     lateinit var requestStreamObserver: StreamObserver<FetchRequest>
 
@@ -68,9 +70,22 @@ class PubSubClient(
 
     var isActive: AtomicBoolean = AtomicBoolean(false)
 
+    init {
+        LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
+        NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
+        channel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
+            .useTransportSecurity().defaultLoadBalancingPolicy("pick_first").build()
+
+        pubSubStub = PubSubGrpc.newStub(channel).withCallCredentials(credentials)
+        pubSubBlockingStub = PubSubGrpc.newBlockingStub(channel).withCallCredentials(credentials)
+
+        topicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
+
+        // .nameResolverFactory(DnsNameResolverProvider())
+    }
+
     fun start() {
-        // Better way - but then channel should be created later
-        // NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
+
         log.info { "Pubsub client starting - reading ${topicInfo.topicName}" }
         isActive.set(true)
 
