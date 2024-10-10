@@ -13,6 +13,7 @@ import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
+import io.grpc.internal.DnsNameResolverProvider
 import io.grpc.stub.StreamObserver
 import mu.KotlinLogging
 import org.apache.avro.Schema
@@ -40,7 +41,8 @@ class PubSubClient(
 ) {
     private val log = KotlinLogging.logger { }
 
-    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443).useTransportSecurity().build()
+    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
+        .useTransportSecurity().nameResolverFactory(DnsNameResolverProvider()).build()
 
     private val credentials = SalesforceCallCredentials()
 
@@ -67,6 +69,8 @@ class PubSubClient(
     var isActive: AtomicBoolean = AtomicBoolean(false)
 
     fun start() {
+        // Better way - but then channel should be created later
+        // NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
         log.info { "Pubsub client starting - reading ${topicInfo.topicName}" }
         isActive.set(true)
 

@@ -3,6 +3,7 @@ package no.nav.sf.pubsub
 import com.salesforce.eventbus.protobuf.ReplayPreset
 import mu.KotlinLogging
 import no.nav.sf.pubsub.pubsub.PubSubClient
+import no.nav.sf.pubsub.pubsub.silentRecordHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -21,9 +22,10 @@ object Application {
 
     private val pubSubClient =
         PubSubClient(
-            TOPIC_NAME,
-            ReplayPreset.EARLIEST,
-            // fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000")
+            salesforceTopic = TOPIC_NAME,
+            initialReplayPreset = ReplayPreset.EARLIEST,
+            // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
+            recordHandler = silentRecordHandler
         )
 
     fun start() {
