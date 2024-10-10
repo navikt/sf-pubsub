@@ -54,7 +54,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.protobuf:protobuf-java:3.25.3'  // Match this version with protoc
+    implementation 'com.google.protobuf:protobuf-java:3.25.5'  // Match this version with protoc
     implementation 'javax.annotation:javax.annotation-api:1.3.2'  // Add this for @Generated annotation
     //implementation 'com.salesforce.pubsub:pubsub-api-client:1.0.0' // Example version, check latest
     //implementation 'io.grpc:grpc-netty-shaded:1.42.0'  // For gRPC
