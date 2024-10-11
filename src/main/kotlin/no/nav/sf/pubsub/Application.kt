@@ -50,7 +50,7 @@ object Application {
         "/access" bind Method.GET to {
             Response(OK).body(
                 "Accesstoken: ${accessTokenHandler.accessToken}, " +
-                    "instance url: ${accessTokenHandler.instanceUrl}, org id: ${accessTokenHandler.tenantId}"
+                    "instance url: ${accessTokenHandler.instanceUrl}, org id:  ${accessTokenHandler.tenantId}"
             )
         }
     )
