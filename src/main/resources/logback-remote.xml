@@ -8,4 +8,8 @@
         <appender-ref ref="stdout_json" />
     </root>
 
+    <logger name="org.apache.kafka" level="INFO"/>
+    <logger name="o.a.k.clients" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
+
 </configuration>
