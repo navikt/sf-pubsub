@@ -19,6 +19,7 @@ logbody*
 Scratch*
 arguments*
 /src/main/kotlin/no/nav/sf/pubsub/reference/
+/src/test/resources/local.env
 
 # misc
 .*.sw?
