@@ -53,6 +53,9 @@ spec:
           cluster: dev-external
         - application: itestapp
           namespace: teamcrm
+    outbound:
+      external:
+        - host: api.pubsub.salesforce.com
   kafka:
     pool: nav-dev
   envFrom:
