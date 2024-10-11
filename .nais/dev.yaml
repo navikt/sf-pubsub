@@ -56,6 +56,7 @@ spec:
     outbound:
       external:
         - host: api.pubsub.salesforce.com
+          port: 7443
   kafka:
     pool: nav-dev
   envFrom:

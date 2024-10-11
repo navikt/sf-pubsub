@@ -74,6 +74,8 @@ class PubSubClient(
 
         topicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
 
+        log.info { "Query for topic Done" }
+
         // .nameResolverFactory(DnsNameResolverProvider())
     }
 
