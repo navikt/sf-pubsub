@@ -40,8 +40,7 @@ class PubSubClient(
 ) {
     private val log = KotlinLogging.logger { }
 
-    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
-        .useTransportSecurity().defaultLoadBalancingPolicy("pick_first").build()
+    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443).useTransportSecurity().build()
 
     private val credentials = SalesforceCallCredentials()
 
@@ -49,7 +48,7 @@ class PubSubClient(
 
     private val pubSubBlockingStub: PubSubGrpc.PubSubBlockingStub = PubSubGrpc.newBlockingStub(channel).withCallCredentials(credentials)
 
-    private val topicInfo: TopicInfo
+    private val topicInfo: TopicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
 
     lateinit var requestStreamObserver: StreamObserver<FetchRequest>
 
@@ -67,20 +66,7 @@ class PubSubClient(
 
     var isActive: AtomicBoolean = AtomicBoolean(false)
 
-    init {
-        // LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
-        // NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
-        log.info { "Query for topic" }
-
-        topicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
-
-        log.info { "Query for topic Done" }
-
-        // .nameResolverFactory(DnsNameResolverProvider())
-    }
-
     fun start() {
-
         log.info { "Pubsub client starting - reading ${topicInfo.topicName}" }
         isActive.set(true)
 
