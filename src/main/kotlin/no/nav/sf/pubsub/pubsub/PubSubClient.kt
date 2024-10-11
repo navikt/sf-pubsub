@@ -40,13 +40,14 @@ class PubSubClient(
 ) {
     private val log = KotlinLogging.logger { }
 
-    private val channel: ManagedChannel
+    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
+        .useTransportSecurity().defaultLoadBalancingPolicy("pick_first").build()
 
     private val credentials = SalesforceCallCredentials()
 
-    private val pubSubStub: PubSubGrpc.PubSubStub
+    private val pubSubStub: PubSubGrpc.PubSubStub = PubSubGrpc.newStub(channel).withCallCredentials(credentials)
 
-    private val pubSubBlockingStub: PubSubGrpc.PubSubBlockingStub
+    private val pubSubBlockingStub: PubSubGrpc.PubSubBlockingStub = PubSubGrpc.newBlockingStub(channel).withCallCredentials(credentials)
 
     private val topicInfo: TopicInfo
 
@@ -69,11 +70,6 @@ class PubSubClient(
     init {
         // LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
         // NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
-        channel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
-            .useTransportSecurity().defaultLoadBalancingPolicy("pick_first").build()
-
-        pubSubStub = PubSubGrpc.newStub(channel).withCallCredentials(credentials)
-        pubSubBlockingStub = PubSubGrpc.newBlockingStub(channel).withCallCredentials(credentials)
 
         topicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
 
