@@ -21,6 +21,7 @@ fun kafkaRecordHandler(topic: String): (GenericRecord) -> Boolean = {
     val kafkaRecord = ProducerRecord(topic, "key", it.toString())
     try {
         Kafka.kafkaProducer.send(kafkaRecord).get()
+        log.info { "Sent a record to topic $topic" }
         true
     } catch (e: Exception) {
         e.printStackTrace()

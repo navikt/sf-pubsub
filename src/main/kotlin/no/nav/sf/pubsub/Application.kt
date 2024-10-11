@@ -3,7 +3,7 @@ package no.nav.sf.pubsub
 import com.salesforce.eventbus.protobuf.ReplayPreset
 import mu.KotlinLogging
 import no.nav.sf.pubsub.pubsub.PubSubClient
-import no.nav.sf.pubsub.pubsub.silentRecordHandler
+import no.nav.sf.pubsub.pubsub.kafkaRecordHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -25,7 +25,7 @@ object Application {
             salesforceTopic = TOPIC_NAME,
             initialReplayPreset = ReplayPreset.EARLIEST,
             // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = silentRecordHandler
+            recordHandler = kafkaRecordHandler("bjorn-message") // silentRecordHandler
         )
 
     fun start() {
@@ -50,7 +50,7 @@ object Application {
         "/access" bind Method.GET to {
             Response(OK).body(
                 "Accesstoken: ${accessTokenHandler.accessToken}, " +
-                    "instance url: ${accessTokenHandler.instanceUrl}, org id:  ${accessTokenHandler.tenantId}"
+                    "instance url: ${accessTokenHandler.instanceUrl}, org id: ${accessTokenHandler.tenantId}"
             )
         }
     )
