@@ -25,7 +25,7 @@ object Application {
             salesforceTopic = TOPIC_NAME,
             initialReplayPreset = ReplayPreset.EARLIEST,
             // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = kafkaRecordHandler("bjorn-message") // silentRecordHandler
+            recordHandler = kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
         )
 
     fun start() {
