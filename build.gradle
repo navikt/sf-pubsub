@@ -21,6 +21,7 @@ jar {
 shadowJar {
     archiveBaseName = 'app'
     archiveClassifier = ''
+    mergeServiceFiles()
 }
 
 application {
