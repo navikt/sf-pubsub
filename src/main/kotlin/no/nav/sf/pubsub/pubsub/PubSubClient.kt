@@ -71,8 +71,8 @@ class PubSubClient(
     var isActive: AtomicBoolean = AtomicBoolean(false)
 
     init {
-        LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
-        NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
+        //LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
+        //NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
         channel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443)
             .useTransportSecurity().defaultLoadBalancingPolicy("pick_first").build()
 
