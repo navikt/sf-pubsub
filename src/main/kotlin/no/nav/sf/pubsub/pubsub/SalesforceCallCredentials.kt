@@ -3,11 +3,14 @@ package no.nav.sf.pubsub.pubsub
 import io.grpc.CallCredentials
 import io.grpc.Metadata
 import io.grpc.Status
+import mu.KotlinLogging
 import no.nav.sf.pubsub.token.AccessTokenHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import java.util.concurrent.Executor
 
 class SalesforceCallCredentials(private val accessTokenHandler: AccessTokenHandler = DefaultAccessTokenHandler()) : CallCredentials() {
+
+    private val log = KotlinLogging.logger { }
 
     companion object {
         private fun keyOf(name: String): Metadata.Key<String> = Metadata.Key.of(name, Metadata.ASCII_STRING_MARSHALLER)
@@ -21,6 +24,7 @@ class SalesforceCallCredentials(private val accessTokenHandler: AccessTokenHandl
         appExecutor: Executor,
         applier: MetadataApplier
     ) {
+        log.debug { "Apply metadata ${accessTokenHandler.instanceUrl} ${accessTokenHandler.tenantId} ${accessTokenHandler.accessToken}" }
         // Use the appExecutor to apply metadata asynchronously
         appExecutor.execute {
             try {

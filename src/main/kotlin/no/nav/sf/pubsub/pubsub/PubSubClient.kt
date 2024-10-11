@@ -70,6 +70,7 @@ class PubSubClient(
     init {
         // LoadBalancerRegistry.getDefaultRegistry().register(PickFirstLoadBalancerProvider())
         // NameResolverRegistry.getDefaultRegistry().register(DnsNameResolverProvider())
+        log.info { "Query for topic" }
 
         topicInfo = pubSubBlockingStub.getTopic(TopicRequest.newBuilder().setTopicName(salesforceTopic).build())
 
