@@ -21,5 +21,8 @@ spec:
       application: sf-pubsub
       access: readwrite
     - team: teamcrm
+      application: sf-task
+      access: readwrite
+    - team: teamcrm
       application: sf-bjorntest
       access: readwrite

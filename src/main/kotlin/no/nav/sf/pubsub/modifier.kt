@@ -37,9 +37,6 @@ fun reduceByWhitelist(
         val longToInstantStringTransformList: MutableSet<List<String>> = mutableSetOf()
         val removeList = findNonWhitelistedFields(whitelistObject, messageObject, longToInstantStringTransformList)
 
-        println("TRANSFORMLIST")
-        longToInstantStringTransformList.forEach { println(it.joinToString(".")) }
-
         File("/tmp/latestDroppedFields").writeText(
             removeList.map { it.joinToString(".") }.joinToString("\n")
         )
@@ -56,7 +53,6 @@ fun reduceByWhitelist(
             messageObject.transformField(it)
         }
 
-        println(messageObject.toString())
         return messageObject.toString()
     } catch (e: Exception) {
         File("/tmp/reduceByWhitelistFail").appendText("At $currentTimeTag\n$json\n\n")

@@ -24,7 +24,7 @@ object Application {
     private val pubSubClient =
         PubSubClient(
             salesforceTopic = TOPIC_NAME,
-            initialReplayPreset = ReplayPreset.EARLIEST,
+            initialReplayPreset = ReplayPreset.LATEST,
             // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
             recordHandler = kafkaRecordHandler("team-dialog.task") // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
         )
