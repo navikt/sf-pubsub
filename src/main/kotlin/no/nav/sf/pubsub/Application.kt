@@ -2,8 +2,9 @@ package no.nav.sf.pubsub
 
 import com.salesforce.eventbus.protobuf.ReplayPreset
 import mu.KotlinLogging
+import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
-import no.nav.sf.pubsub.pubsub.kafkaRecordHandler
+import no.nav.sf.pubsub.pubsub.defaultRecordHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -18,14 +19,14 @@ import org.http4k.server.asServer
 object Application {
     private val log = KotlinLogging.logger { }
 
-    private const val TOPIC_NAME = "/event/BjornMessage__e"
+    private const val TOPIC_NAME = "/data/TaskChangeEvent" // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
 
     private val pubSubClient =
         PubSubClient(
             salesforceTopic = TOPIC_NAME,
             initialReplayPreset = ReplayPreset.EARLIEST,
             // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+            recordHandler = defaultRecordHandler // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
         )
 
     fun start() {
@@ -47,6 +48,7 @@ object Application {
         "/internal/isAlive" bind Method.GET to { Response(OK) },
         "/internal/isReady" bind Method.GET to { Response(OK) },
         "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
+        "/internal/gui" bind Method.GET to Gui.guiHandler,
         "/access" bind Method.GET to {
             Response(OK).body(
                 "Accesstoken: ${accessTokenHandler.accessToken}, " +

@@ -1,0 +1,32 @@
+{
+  "ChangeEventHeader": {
+    "changeType": "ALL",
+    "commitTimestamp" : "DATE_FROM_MILLIS"
+  },
+  "LastModifiedDate" : "DATE_FROM_MILLIS",
+  "LastModifiedById" : "ALL",
+  "AccountId" : "ALL",
+  "WhatId" : "ALL",
+  "ReminderDateTime" : "DATE_FROM_MILLIS",
+  "IsClosed" : "ALL",
+  "CreatedById" : "ALL",
+  "TAG_ActivityType__c" : "ALL",
+  "Status" : "ALL",
+  "TAG_IACaseNumber__c" : "ALL",
+  "WhoId" : "ALL",
+  "ActivityDate" : "DATE_FROM_MILLIS",
+  "Priority" : "ALL",
+  "Subject" : "ALL",
+  "Type" : "ALL",
+  "TAG_service__c" : "ALL",
+  "CompletedDateTime" : "DATE_FROM_MILLIS",
+  "CreatedDate" : "DATE_FROM_MILLIS",
+  "INT_AccountOrgNumber__c" : "ALL",
+  "INT_UserRegion__c" : "ALL",
+  "INT_UserNAVUnitName__c" : "ALL",
+  "INT_AccountNAVUnitNr__c" : "ALL",
+  "INT_AccountOrgType__c" : "ALL",
+  "INT_AccountParentId__c" : "ALL",
+  "INT_AccountParentOrgNumber__c" : "ALL",
+  "INT_UserNAVUnitNr__c": "ALL"
+}

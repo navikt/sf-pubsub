@@ -40,7 +40,7 @@ class PubSubClient(
 ) {
     private val log = KotlinLogging.logger { }
 
-    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com", 7443).useTransportSecurity().build()
+    private val channel: ManagedChannel = ManagedChannelBuilder.forAddress("api.pubsub.salesforce.com" /*"api.pubsub.salesforce.com"*/, 7443).useTransportSecurity().build()
 
     private val credentials = SalesforceCallCredentials()
 

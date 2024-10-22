@@ -1,10 +1,10 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: bjorn-message
-  namespace: teamcrm
+  name: task
+  namespace: team-dialog
   labels:
-    team: teamcrm
+    team: team-dialog
   annotations:
     kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
 spec:
@@ -19,4 +19,7 @@ spec:
   acl:
     - team: teamcrm
       application: sf-pubsub
+      access: readwrite
+    - team: teamcrm
+      application: sf-bjorntest
       access: readwrite

@@ -1,0 +1,84 @@
+name: Test/Build/Deploy
+
+on:
+  workflow_call:
+    inputs:
+      DEPLOY_APP:
+        required: true
+        type: string
+      DEPLOY_CLUSTER:
+        required: true
+        type: string
+jobs:
+  run-info:
+    name: >- # Displays inputs as name on job
+      ${{ inputs.DEPLOY_APP }} - ${{ inputs.DEPLOY_CLUSTER }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump github context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+  test:
+    name: Run tests
+    needs: run-info
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: Build and run tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew test
+  build:
+    name: Build and push Docker container
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: Setup Gradle to generate and submit dependency graphs
+        uses: gradle/gradle-build-action@v3
+        with:
+          dependency-graph: generate-and-submit
+      - name: Build JAR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew clean build shadowJar -x test
+      - name: Build and publish Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-push
+        with:
+          team: teamcrm
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+#      - name: Create image URL artifact
+#        run: echo "${{ steps.docker-push.outputs.image }}" > ./imageUrl.txt
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: imageUrl
+#          path: ./imageUrl.txt
+  deploy:
+    name: Deploy ${{ inputs.DEPLOY_APP }} to ${{ inputs.DEPLOY_CLUSTER }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: ${{ inputs.DEPLOY_CLUSTER }}
+          RESOURCE: .nais/${{ inputs.DEPLOY_APP }}/${{ inputs.DEPLOY_CLUSTER }}.yaml
+          VAR: image=${{ needs.build.outputs.image }},DEPLOY_APP=${{ inputs.DEPLOY_APP }},DEPLOY_CLUSTER=${{ inputs.DEPLOY_CLUSTER }}

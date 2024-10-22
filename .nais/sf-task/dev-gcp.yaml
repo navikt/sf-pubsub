@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: sf-pubsub
+  name: "{{ DEPLOY_APP }}"
   namespace: teamcrm
   labels:
     team: teamcrm
@@ -43,8 +43,6 @@ spec:
         extra:
           - azp_name
           - NAVident
-    sidecar:
-      enabled: false # Currently cannot use - causes 404 when app tries calling dev-fss-pub.nais.io ingresses
   accessPolicy:
     inbound:
       rules:
@@ -61,9 +59,11 @@ spec:
   kafka:
     pool: nav-dev
   envFrom:
-    - secret: sf-pubsub
+    - secret: sf-pubsub-preprod
   env:
     - name: SF_TOKENHOST
-      value: https://login.salesforce.com/services/oauth2/token
+      value: https://test.salesforce.com/services/oauth2/token
     - name: WHITELIST_FILE
       value: '/whitelist/task/dev.json'
+    - name: KAFKA_TOPIC
+      value: 'team-dialog.task'

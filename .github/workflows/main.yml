@@ -1,0 +1,14 @@
+name: Preconfigured run on push
+
+on: [push, pull_request]
+
+jobs:
+  build-deploy:
+    uses: ./.github/workflows/workflow.yml
+    permissions:
+      id-token: write
+      contents: write
+    secrets: inherit
+    with:
+      DEPLOY_APP: sf-task
+      DEPLOY_CLUSTER: dev-gcp
