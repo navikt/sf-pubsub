@@ -22,7 +22,8 @@ val defaultRecordHandler: (GenericRecord) -> Boolean = {
     if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
     val id = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").first().asString
 
-    log.info { "Process record (id $id, valid $onlyOneId): ${gsonPrettyPrinter.toJson(jsonObject)}" }
+    log.debug { "Process record (id $id, valid $onlyOneId): ${gsonPrettyPrinter.toJson(jsonObject)}" }
+    log.info { "Successfully processed a record" }
     true
 }
 

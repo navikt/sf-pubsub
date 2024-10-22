@@ -172,7 +172,7 @@ class PubSubClient(
     private fun processEvent(event: ConsumerEvent) {
         val writerSchema: Schema = getSchema(event.event.schemaId)
         val record: GenericRecord = deserialize(writerSchema, event.event.payload)
-        log.info { "Received event with payload: " + record.toString() + " with schema name: " + writerSchema.name + " with replayID: " + event.replayId }
+        log.debug { "Received event with payload: " + record.toString() + " with schema name: " + writerSchema.name + " with replayID: " + event.replayId }
         val success = recordHandler(record)
         if (success) {
             latestConsumedReplay = event.replayId

@@ -4,7 +4,7 @@ import com.salesforce.eventbus.protobuf.ReplayPreset
 import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
-import no.nav.sf.pubsub.pubsub.defaultRecordHandler
+import no.nav.sf.pubsub.pubsub.kafkaRecordHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -26,7 +26,7 @@ object Application {
             salesforceTopic = TOPIC_NAME,
             initialReplayPreset = ReplayPreset.EARLIEST,
             // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = defaultRecordHandler // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+            recordHandler = kafkaRecordHandler("team-dialog.task") // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
         )
 
     fun start() {
