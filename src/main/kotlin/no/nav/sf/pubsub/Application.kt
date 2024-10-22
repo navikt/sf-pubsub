@@ -34,7 +34,7 @@ object Application {
         pubSubClient.start()
 
         while (pubSubClient.isActive.get()) {
-            Thread.sleep(5000)
+            Thread.sleep(600000) // Every 10th min
             log.info(
                 "Subscription Active. Received a total of " + pubSubClient.receivedEvents.get() +
                     " events. Processed " + pubSubClient.processedEvents.get()
