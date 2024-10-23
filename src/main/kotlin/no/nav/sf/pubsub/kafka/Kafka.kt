@@ -13,7 +13,8 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 object Kafka {
-    val kafkaProducer = KafkaProducer<String, String>(propertiesBase)
+    val kafkaProducer
+        get() = KafkaProducer<String, String>(propertiesBase)
 
     private const val clientId = "sf-pubsub"
 

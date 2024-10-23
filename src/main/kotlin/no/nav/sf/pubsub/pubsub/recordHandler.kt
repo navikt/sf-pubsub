@@ -8,6 +8,7 @@ import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.errors.TopicAuthorizationException
 import java.lang.RuntimeException
 
 private val log = KotlinLogging.logger { }
@@ -42,6 +43,10 @@ fun kafkaRecordHandler(topic: String): (GenericRecord) -> Boolean = {
         log.info { "Sent a record to topic $topic" }
         true
     } catch (e: Exception) {
+        if (e is TopicAuthorizationException) {
+            log.info("Topic authorization exception caught, will sleep 5 s : ${e.message}")
+            Thread.sleep(5000)
+        }
         e.printStackTrace()
         false
     }
