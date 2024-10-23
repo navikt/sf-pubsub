@@ -42,7 +42,8 @@ fun kafkaRecordHandler(topic: String): (GenericRecord) -> Boolean = {
         Kafka.kafkaProducer.send(kafkaRecord).get()
         log.info { "Sent a record to topic $topic" }
         true
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
+        log.info { "In kafkaproducer catch $e" }
         if (e.cause is TopicAuthorizationException) {
             log.info("Topic authorization exception caught, will sleep 5 s : ${e.message}")
             Thread.sleep(5000)
