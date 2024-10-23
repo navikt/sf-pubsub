@@ -16,6 +16,12 @@ object Metrics {
 
     private val cRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry
 
+    val consumedCounter = registerCounter("consumed")
+    val postedCounter = registerCounter("posted")
+
+    fun registerCounter(name: String) =
+        Counter.build().name(name).help(name).register()
+
     fun registerGauge(name: String) =
         Gauge.build().name(name).help(name).register()
 

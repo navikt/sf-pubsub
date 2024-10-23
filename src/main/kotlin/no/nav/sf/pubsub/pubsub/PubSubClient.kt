@@ -15,6 +15,7 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import mu.KotlinLogging
+import no.nav.sf.pubsub.Metrics
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.generic.GenericRecord
@@ -114,8 +115,11 @@ class PubSubClient(
     private val responseStreamObserver = object : StreamObserver<FetchResponse> {
         override fun onNext(response: FetchResponse) {
 
-            log.info { "Received batch of " + response.eventsList.size + " events" }
-            log.info { "RPC ID: " + response.rpcId }
+            if (response.eventsList.size > 0) {
+                log.info { "Received batch of " + response.eventsList.size + " events" }
+                Metrics.consumedCounter.inc(response.eventsList.size.toDouble())
+            }
+            // log.info { "RPC ID: " + response.rpcId }
             for (event: ConsumerEvent in response.eventsList) {
                 receivedEvents.addAndGet(1)
                 processEvent(event)
@@ -177,6 +181,7 @@ class PubSubClient(
         if (success) {
             latestConsumedReplay = event.replayId
             processedEvents.addAndGet(1)
+            Metrics.postedCounter.inc()
         } else {
             log.error { "Failed to consume record - will cancel" }
             throw RuntimeException("Failed to consume record - will cancel")
