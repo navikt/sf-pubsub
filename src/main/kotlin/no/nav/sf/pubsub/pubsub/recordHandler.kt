@@ -43,7 +43,7 @@ fun kafkaRecordHandler(topic: String): (GenericRecord) -> Boolean = {
         log.info { "Sent a record to topic $topic" }
         true
     } catch (e: Exception) {
-        if (e is TopicAuthorizationException) {
+        if (e.cause is TopicAuthorizationException) {
             log.info("Topic authorization exception caught, will sleep 5 s : ${e.message}")
             Thread.sleep(5000)
         }
