@@ -4,6 +4,7 @@ import com.salesforce.eventbus.protobuf.ReplayPreset
 import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
+import no.nav.sf.pubsub.pubsub.Redis
 import no.nav.sf.pubsub.pubsub.kafkaRecordHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.http4k.core.HttpHandler
@@ -21,6 +22,8 @@ object Application {
 
     private const val TOPIC_NAME = "/data/TaskChangeEvent" // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
 
+    private val replayAll = false
+
     private val pubSubClient =
         PubSubClient(
             salesforceTopic = TOPIC_NAME,
@@ -31,6 +34,10 @@ object Application {
 
     fun start() {
         apiServer(8080).start()
+        if (Redis.useMe) {
+            Redis.latch.await() // Wait for redis initialization to be done, and possibly replayId fetched from store
+        }
+
         pubSubClient.start()
 
         while (pubSubClient.isActive.get()) {
@@ -46,7 +53,7 @@ object Application {
 
     fun api(): HttpHandler = routes(
         "/internal/isAlive" bind Method.GET to { Response(OK) },
-        "/internal/isReady" bind Method.GET to { Response(OK) },
+        "/internal/isReady" bind Method.GET to Redis.isReadyHandler,
         "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
         "/internal/gui" bind Method.GET to Gui.guiHandler,
         "/access" bind Method.GET to {

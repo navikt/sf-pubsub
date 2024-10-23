@@ -179,9 +179,10 @@ class PubSubClient(
         log.debug { "Received event with payload: " + record.toString() + " with schema name: " + writerSchema.name + " with replayID: " + event.replayId }
         val success = recordHandler(record)
         if (success) {
+            if (Redis.useMe) Redis.storeReplayId(event.replayId)
             latestConsumedReplay = event.replayId
             processedEvents.addAndGet(1)
-            Metrics.postedCounter.inc()
+            Metrics.producedCounter.inc()
         } else {
             log.error { "Failed to consume record - will cancel" }
             throw RuntimeException("Failed to consume record - will cancel")

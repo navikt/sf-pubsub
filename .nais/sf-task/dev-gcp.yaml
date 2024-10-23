@@ -58,6 +58,9 @@ spec:
             - port: 7443
   kafka:
     pool: nav-dev
+  redis:
+    - instance: replay
+      access: readwrite
   envFrom:
     - secret: sf-pubsub-preprod
   env:

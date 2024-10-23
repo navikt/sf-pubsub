@@ -27,6 +27,12 @@ const val secret_KEYSTORE_PASSWORD = "KEYSTORE_PASSWORD"
 const val secret_PRIVATE_KEY_ALIAS = "PRIVATE_KEY_ALIAS"
 const val secret_PRIVATE_KEY_PASSWORD = "PRIVATE_KEY_PASSWORD"
 
+const val env_REDIS_URI_REPLAY = "REDIS_URI_REPLAY"
+const val env_REDIS_USERNAME_REPLAY = "REDIS_USERNAME_REPLAY"
+const val env_REDIS_PASSWORD_REPLAY = "REDIS_PASSWORD_REPLAY"
+
+const val env_NAIS_APP_NAME = "NAIS_APP_NAME"
+
 /**
  * Shortcut for fetching environment variables
  */
@@ -34,7 +40,7 @@ fun env(name: String): String = System.getenv(name)
     ?: localEnvProperties?.getProperty(name)
     ?: throw NullPointerException("Missing env $name")
 
-val isLocal: Boolean = System.getenv("NAIS_APP_NAME") == null
+val isLocal: Boolean = System.getenv(env_NAIS_APP_NAME) == null
 val localEnvProperties: Properties? = if (isLocal) loadLocalEnvProperties() else null
 
 fun loadLocalEnvProperties(): Properties {

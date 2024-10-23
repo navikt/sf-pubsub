@@ -17,7 +17,7 @@ object Metrics {
     private val cRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry
 
     val consumedCounter = registerCounter("consumed")
-    val postedCounter = registerCounter("posted")
+    val producedCounter = registerCounter("produced")
 
     fun registerCounter(name: String) =
         Counter.build().name(name).help(name).register()
