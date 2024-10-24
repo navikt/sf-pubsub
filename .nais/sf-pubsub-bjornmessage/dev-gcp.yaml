@@ -33,7 +33,7 @@ spec:
       cpu: 10m
       memory: 512Mi
   ingresses:
-    - "https://sf-bjorn-message.intern.dev.nav.no"
+    - "https://sf-pubsub-bjornmessage.intern.dev.nav.no"
   azure:
     application:
       enabled: true
