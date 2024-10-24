@@ -143,7 +143,6 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
         for (retry in 1..4) {
             try {
                 val response: Response = client(accessTokenRequest)
-                log.info { response.toMessage() }
                 if (response.status.code == 200) {
                     val accessTokenResponse = gson.fromJson(response.bodyString(), AccessTokenResponse::class.java)
                     lastTokenTriplet = Triple(accessTokenResponse.access_token, accessTokenResponse.instance_url, accessTokenResponse.id.split("/")[4])

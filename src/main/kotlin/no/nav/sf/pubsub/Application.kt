@@ -22,21 +22,29 @@ object Application {
 
     private const val TOPIC_NAME = "/data/TaskChangeEvent" // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
 
-    private val replayAll = false
-
-    private val pubSubClient =
-        PubSubClient(
-            salesforceTopic = TOPIC_NAME,
-            initialReplayPreset = ReplayPreset.LATEST,
-            // initialReplayId = fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = kafkaRecordHandler("team-dialog.task") // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
-        )
-
     fun start() {
         apiServer(8080).start()
-        if (Redis.useMe) {
+
+        val replayPreset = if (Redis.useMe) {
             Redis.latch.await() // Wait for redis initialization to be done, and possibly replayId fetched from store
+            if (Redis.lastReplayId == null) {
+                log.info { "Redis in use, no replay ID found, will read LATEST" }
+                ReplayPreset.LATEST
+            } else {
+                log.info { "Redis in use, replay ID found, will read from (not including) replay ID" }
+                ReplayPreset.CUSTOM
+            }
+        } else {
+            log.info { "No Redis in use, will read LATEST" }
+            ReplayPreset.LATEST
         }
+
+        val pubSubClient = PubSubClient(
+            salesforceTopic = TOPIC_NAME,
+            initialReplayPreset = replayPreset,
+            initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Redis.lastReplayId else null, // fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
+            recordHandler = kafkaRecordHandler("team-dialog.task") // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+        )
 
         pubSubClient.start()
 

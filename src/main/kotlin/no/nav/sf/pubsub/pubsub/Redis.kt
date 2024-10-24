@@ -12,6 +12,7 @@ import no.nav.sf.pubsub.env_NAIS_APP_NAME
 import no.nav.sf.pubsub.env_REDIS_PASSWORD_REPLAY
 import no.nav.sf.pubsub.env_REDIS_URI_REPLAY
 import no.nav.sf.pubsub.env_REDIS_USERNAME_REPLAY
+import no.nav.sf.pubsub.isLocal
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -24,7 +25,7 @@ object Redis {
 
     val latch = CountDownLatch(1) // Concurrent mechanism for main thread to wait on
 
-    const val useMe = true
+    val useMe = !isLocal
 
     var lastReplayId: ByteString? = null
 
@@ -38,7 +39,7 @@ object Redis {
         if (useMe && initialCheckPassed) {
             Response(Status.OK)
         } else {
-            var response = 0L
+            var response: Long
             val queryTime = measureTimeMillis {
                 response = dbSize()
             }
