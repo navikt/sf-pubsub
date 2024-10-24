@@ -30,10 +30,6 @@ object Redis {
     var lastReplayId: ByteString? = null
 
     var initialCheckPassed = false
-        set(value) {
-            field = value
-            if (value) latch.countDown() // Release the latch once initial check passes
-        }
 
     val isReadyHandler: HttpHandler = {
         if (useMe && initialCheckPassed) {
@@ -48,6 +44,7 @@ object Redis {
                 initialCheckPassed = true
                 log.info { "Attempting Redis replay cache fetch" }
                 lastReplayId = fetchReplayId()
+                latch.countDown()
                 if (lastReplayId != null) {
                     log.info { "Fetched replay ID from Redis" }
                 } else {
