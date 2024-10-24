@@ -15,8 +15,8 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import mu.KotlinLogging
-import no.nav.sf.pubsub.Application
 import no.nav.sf.pubsub.Metrics
+import no.nav.sf.pubsub.useRedis
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericDatumReader
 import org.apache.avro.generic.GenericRecord
@@ -180,7 +180,7 @@ class PubSubClient(
         log.debug { "Received event with payload: " + record.toString() + " with schema name: " + writerSchema.name + " with replayID: " + event.replayId }
         val success = recordHandler(record)
         if (success) {
-            if (Application.useRedis) Redis.storeReplayId(event.replayId)
+            if (useRedis) Redis.storeReplayId(event.replayId)
             latestConsumedReplay = event.replayId
             processedEvents.addAndGet(1)
             Metrics.producedCounter.inc()

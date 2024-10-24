@@ -7,12 +7,13 @@ import io.lettuce.core.StaticCredentialsProvider
 import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.api.sync.RedisCommands
 import mu.KotlinLogging
-import no.nav.sf.pubsub.Application
+import no.nav.sf.pubsub.application
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.env_NAIS_APP_NAME
 import no.nav.sf.pubsub.env_REDIS_PASSWORD_REPLAY
 import no.nav.sf.pubsub.env_REDIS_URI_REPLAY
 import no.nav.sf.pubsub.env_REDIS_USERNAME_REPLAY
+import no.nav.sf.pubsub.useRedis
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -64,23 +65,23 @@ object Redis {
 }
 
 val isReadyHandler: HttpHandler = {
-    if (Application.useRedis && Redis.initialCheckPassed) {
+    if (useRedis && Redis.initialCheckPassed) {
         Response(Status.OK)
     } else {
         var response: Long
         val queryTime = measureTimeMillis {
             response = Redis.dbSize()
         }
-        Application.log.info { "Initial check query time $queryTime ms (got count $response)" }
+        application.log.info { "Initial check query time $queryTime ms (got count $response)" }
         if (queryTime < 100) {
             Redis.initialCheckPassed = true
-            Application.log.info { "Attempting Redis replay cache fetch" }
+            application.log.info { "Attempting Redis replay cache fetch" }
             Redis.lastReplayId = Redis.fetchReplayId()
             Redis.latch.countDown()
             if (Redis.lastReplayId != null) {
-                Application.log.info { "Fetched replay ID from Redis" }
+                application.log.info { "Fetched replay ID from Redis" }
             } else {
-                Application.log.info { "No replay ID found in Redis" }
+                application.log.info { "No replay ID found in Redis" }
             }
         }
         Response(Status.SERVICE_UNAVAILABLE)

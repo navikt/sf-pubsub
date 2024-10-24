@@ -6,8 +6,7 @@ import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
 import no.nav.sf.pubsub.pubsub.Redis
 import no.nav.sf.pubsub.pubsub.isReadyHandler
-import no.nav.sf.pubsub.pubsub.kafkaRecordHandler
-import no.nav.sf.pubsub.pubsub.localRecordHandler
+import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Response
@@ -18,8 +17,9 @@ import org.http4k.server.ApacheServer
 import org.http4k.server.Http4kServer
 import org.http4k.server.asServer
 
-object Application {
-    val useRedis = !isLocal
+val useRedis = !isLocal
+
+class Application(val recordHandler: (GenericRecord) -> Boolean) {
 
     val log = KotlinLogging.logger { }
 
@@ -46,7 +46,7 @@ object Application {
             salesforceTopic = salesforceTopic,
             initialReplayPreset = replayPreset,
             initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Redis.lastReplayId else null, // fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = if (isLocal) localRecordHandler else kafkaRecordHandler(env(env_KAFKA_TOPIC)) // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+            recordHandler = recordHandler // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
         )
 
         pubSubClient.start()

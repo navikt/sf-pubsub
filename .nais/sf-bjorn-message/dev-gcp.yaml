@@ -72,3 +72,5 @@ spec:
       value: 'teamcrm.bjorn-message'
     - name: SALESFORCE_TOPIC
       value: '/event/BjornMessage__e'
+    - name: DEPLOY_APP
+      value: '{{ DEPLOY_APP }}'

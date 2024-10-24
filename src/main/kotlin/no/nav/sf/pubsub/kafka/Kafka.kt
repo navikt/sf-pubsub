@@ -1,5 +1,6 @@
 package no.nav.sf.pubsub.kafka
 
+import no.nav.sf.pubsub.config_KAFKA_TOPIC
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.env_KAFKA_BROKERS
 import no.nav.sf.pubsub.env_KAFKA_CREDSTORE_PASSWORD
@@ -13,6 +14,8 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 object Kafka {
+    val topic = env(config_KAFKA_TOPIC)
+
     val kafkaProducer
         get() = KafkaProducer<String, String>(propertiesBase)
 

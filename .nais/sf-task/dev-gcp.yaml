@@ -72,3 +72,5 @@ spec:
       value: 'team-dialog.task'
     - name: SALESFORCE_TOPIC
       value: '/data/TaskChangeEvent'
+    - name: DEPLOY_APP
+      value: '{{ DEPLOY_APP }}'
