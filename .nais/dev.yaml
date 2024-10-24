@@ -53,8 +53,6 @@ spec:
           cluster: dev-external
         - application: itestapp
           namespace: teamcrm
-        - application: sf-dvh
-          namespace: team-dialog
     outbound:
       external:
         - host: api.pubsub.salesforce.com
