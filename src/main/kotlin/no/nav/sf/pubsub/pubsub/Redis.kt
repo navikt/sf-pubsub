@@ -3,6 +3,7 @@ package no.nav.sf.pubsub.pubsub
 import com.google.protobuf.ByteString
 import io.lettuce.core.RedisClient
 import io.lettuce.core.RedisURI
+import io.lettuce.core.SetArgs
 import io.lettuce.core.StaticCredentialsProvider
 import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.api.sync.RedisCommands
@@ -47,7 +48,7 @@ object Redis {
 
     fun storeReplayId(replayId: ByteString) {
         val replayIdString = replayId.toByteArray().let { Base64.getEncoder().encodeToString(it) }
-        commands.set(env(env_NAIS_APP_NAME), replayIdString)
+        commands.set(env(env_NAIS_APP_NAME), replayIdString, SetArgs().ex(259200)) // Expire after 72h
         log.info { "Stored replay ID in Redis for app: ${env(env_NAIS_APP_NAME)}" }
     }
 

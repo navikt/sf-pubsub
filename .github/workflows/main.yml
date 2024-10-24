@@ -10,5 +10,5 @@ jobs:
       contents: write
     secrets: inherit
     with:
-      DEPLOY_APP: sf-task
+      DEPLOY_APP: sf-pubsub-task
       DEPLOY_CLUSTER: dev-gcp
