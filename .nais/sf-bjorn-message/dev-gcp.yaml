@@ -33,7 +33,7 @@ spec:
       cpu: 10m
       memory: 512Mi
   ingresses:
-    - "https://sf-task.intern.dev.nav.no"
+    - "https://sf-bjorn-message.intern.dev.nav.no"
   azure:
     application:
       enabled: true
@@ -67,8 +67,8 @@ spec:
     - name: SF_TOKENHOST
       value: https://test.salesforce.com/services/oauth2/token
     - name: WHITELIST_FILE
-      value: '/whitelist/task/dev.json'
+      value: '/whitelist/bjorn-message/dev.json'
     - name: KAFKA_TOPIC
-      value: 'team-dialog.task'
+      value: 'teamcrm.bjorn-message'
     - name: SALESFORCE_TOPIC
-      value: '/data/TaskChangeEvent'
+      value: '/event/BjornMessage__e'

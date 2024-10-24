@@ -7,12 +7,12 @@ import io.lettuce.core.StaticCredentialsProvider
 import io.lettuce.core.api.StatefulRedisConnection
 import io.lettuce.core.api.sync.RedisCommands
 import mu.KotlinLogging
+import no.nav.sf.pubsub.Application
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.env_NAIS_APP_NAME
 import no.nav.sf.pubsub.env_REDIS_PASSWORD_REPLAY
 import no.nav.sf.pubsub.env_REDIS_URI_REPLAY
 import no.nav.sf.pubsub.env_REDIS_USERNAME_REPLAY
-import no.nav.sf.pubsub.isLocal
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -25,35 +25,9 @@ object Redis {
 
     val latch = CountDownLatch(1) // Concurrent mechanism for main thread to wait on
 
-    val useMe = !isLocal
-
     var lastReplayId: ByteString? = null
 
     var initialCheckPassed = false
-
-    val isReadyHandler: HttpHandler = {
-        if (useMe && initialCheckPassed) {
-            Response(Status.OK)
-        } else {
-            var response: Long
-            val queryTime = measureTimeMillis {
-                response = dbSize()
-            }
-            log.info { "Initial check query time $queryTime ms (got count $response)" }
-            if (queryTime < 100) {
-                initialCheckPassed = true
-                log.info { "Attempting Redis replay cache fetch" }
-                lastReplayId = fetchReplayId()
-                latch.countDown()
-                if (lastReplayId != null) {
-                    log.info { "Fetched replay ID from Redis" }
-                } else {
-                    log.info { "No replay ID found in Redis" }
-                }
-            }
-            Response(Status.SERVICE_UNAVAILABLE)
-        }
-    }
 
     fun connectToRedis(): RedisCommands<String, String> {
         val staticCredentialsProvider = StaticCredentialsProvider(
@@ -87,4 +61,28 @@ object Redis {
     val commands = connectToRedis()
 
     fun dbSize(): Long = commands.dbsize()
+}
+
+val isReadyHandler: HttpHandler = {
+    if (Application.useRedis && Redis.initialCheckPassed) {
+        Response(Status.OK)
+    } else {
+        var response: Long
+        val queryTime = measureTimeMillis {
+            response = Redis.dbSize()
+        }
+        Application.log.info { "Initial check query time $queryTime ms (got count $response)" }
+        if (queryTime < 100) {
+            Redis.initialCheckPassed = true
+            Application.log.info { "Attempting Redis replay cache fetch" }
+            Redis.lastReplayId = Redis.fetchReplayId()
+            Redis.latch.countDown()
+            if (Redis.lastReplayId != null) {
+                Application.log.info { "Fetched replay ID from Redis" }
+            } else {
+                Application.log.info { "No replay ID found in Redis" }
+            }
+        }
+        Response(Status.SERVICE_UNAVAILABLE)
+    }
 }

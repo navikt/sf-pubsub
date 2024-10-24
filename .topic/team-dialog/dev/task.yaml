@@ -18,9 +18,6 @@ spec:
     retentionHours: 720 #30 days
   acl:
     - team: teamcrm
-      application: sf-pubsub
-      access: readwrite
-    - team: teamcrm
       application: sf-task
       access: readwrite
     - team: teamcrm

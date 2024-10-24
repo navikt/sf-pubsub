@@ -15,15 +15,15 @@ private val log = KotlinLogging.logger { }
 
 val gsonPrettyPrinter = GsonBuilder().setPrettyPrinting().serializeNulls().create()
 
-val defaultRecordHandler: (GenericRecord) -> Boolean = {
+val localRecordHandler: (GenericRecord) -> Boolean = {
     // List<String> FIELDS = new List<String> { 'Id', 'WhatId', 'AccountId','WhoId', 'Subject', 'ActivityDate', 'TAG_AccountNAVUnit__c', 'TAG_AccountOrgType__c', 'TAG_UserNAVUnit__c', 'TAG_AccountParentId__c', 'TAG_AccountParentOrgNumber__c', 'Status', 'Priority', 'Type', 'CreatedDate', 'LastModifiedDate', 'CreatedById', 'LastModifiedById', 'IsClosed', 'IsArchived', 'TaskSubtype', 'CompletedDateTime', 'TAG_ActivityType__c', 'TAG_service__c', 'CRM_Region__c', 'CRM_Unit__c', 'CRM_AccountOrgNumber__c', 'ReminderDateTime', 'TAG_IACaseNumber__c', 'TAG_IACooperationId__c', 'IASubtheme__c' };
     // String PARAMETERS = 'AccountId != null AND TAG_AccountOrgType2__c != null';       // After a WHERE clause. Empty or null to fetch all records
     val jsonObject = it.asJsonObject()
-    val onlyOneId = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").size() == 1
-    if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
-    val id = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").first().asString
+    // val onlyOneId = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").size() == 1
+    // if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
+    // val id = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").first().asString
 
-    log.debug { "Process record (id $id, valid $onlyOneId): ${gsonPrettyPrinter.toJson(jsonObject)}" }
+    log.debug { "Processed record prettified:\n${gsonPrettyPrinter.toJson(jsonObject)}" }
     log.info { "Successfully processed a record" }
     true
 }
