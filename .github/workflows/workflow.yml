@@ -106,5 +106,5 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{ inputs.DEPLOY_CLUSTER }}
-          RESOURCE: .nais/${{ matrix.target.app }}/${{ inputs.DEPLOY_CLUSTER }}.yaml
+          RESOURCE: .nais/${{ matrix.target.app }}/target/${{ inputs.DEPLOY_CLUSTER }}.yaml
           VAR: image=${{ needs.build.outputs.image }},DEPLOY_APP=${{ matrix.target.app }},DEPLOY_CLUSTER=${{ inputs.DEPLOY_CLUSTER }}
