@@ -70,9 +70,10 @@ class PubSubClient(
 
     fun start() {
         log.info { "Pubsub client starting - reading ${topicInfo.topicName}" }
-        isActive.set(true)
 
         triggerFetchAndSubscribe(initialReplayPreset, initialReplayId)
+
+        isActive.set(true)
 
         // Keep the application running to listen to events
         Runtime.getRuntime().addShutdownHook(
