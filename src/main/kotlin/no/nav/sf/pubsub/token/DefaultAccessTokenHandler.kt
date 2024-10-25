@@ -36,19 +36,6 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
 
     private val log = KotlinLogging.logger { }
 
-    /*
-    private val sfTokenHost = env(config_SF_TOKENHOST)
-    private val sfClientID = env(secret_SF_CLIENT_ID)
-    private val sfUsername = env(secret_SF_USERNAME)
-    private val keystoreB64 = env(secret_KEYSTORE_JKS_B64)
-    private val keystorePassword = env(secret_KEYSTORE_PASSWORD)
-    private val privateKeyAlias = env(secret_PRIVATE_KEY_ALIAS)
-    private val privateKeyPassword = env(secret_PRIVATE_KEY_PASSWORD)
-
-    private val client: HttpHandler = supportProxy()
-
-     */
-
     private val sfTokenHost = env(config_SF_TOKENHOST)
     private val sfClientID = env(secret_SF_CLIENT_ID)
     private val sfUsername = env(secret_SF_USERNAME)
@@ -99,46 +86,6 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
                     "assertion" to "$claimWithHeaderJsonUrlSafe.$fullClaimSignature"
                 ).toBody()
             )
-
-        /*
-        val accessTokenRequest = Request(Method.POST, sfTokenHost)
-            .header("Content-Type", "application/x-www-form-urlencoded")
-            .body(
-                listOf(
-                    "grant_type" to "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                    "assertion" to "$claimWithHeaderJsonUrlSafe.$fullClaimSignature"
-                ).toBody()
-            )
-
-         */
-
-        /*
-        // Define the token request URL
-        val authUrl = Uri.of("https://login.salesforce.com/services/oauth2/token")
-
-        // OMG! Secrets in the open !!
-        val clientId = "3MVG9k02hQhyUgQCvsapAG0Q2HEwNqB0tjDdC0v0.LAZtzU3Nqh0CmgEQqU8ejFbbAhSFz6qkgNV4VlF1QThE"
-        val clientSecret = "91B61FB35241D6974AD4A4A29972A870C3F5C236DCA55D80C5D74A6AB16F5E85"
-        val username = "bjorn.hagglund@brave-fox-gtelqx.com"
-        val password = "PubSub2024!"
-        val securityToken = "lMniDCKWno3lOHmlTDZ8Nvcg"
-        val passwordWithToken = password + securityToken
-
-        val accessTokenRequest = Request(Method.POST, authUrl)
-            .body(
-                listOf(
-                    "grant_type" to "client_credentials",
-                    "client_id" to clientId,
-                    "client_secret" to clientSecret
-                    //"username" to username,
-                    //"password" to passwordWithToken
-                ).toBody()
-            )
-            .header("Content-Type", "application/x-www-form-urlencoded")
-
-        // Send the request and get the response
-        // val response: Response = client(request)
-         */
 
         for (retry in 1..4) {
             try {
