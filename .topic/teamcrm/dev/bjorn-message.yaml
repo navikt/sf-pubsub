@@ -24,5 +24,5 @@ spec:
       application: sf-bjorntest
       access: readwrite
     - team: teamcrm
-      application: itestapp3
+      application: itestapp
       access: readwrite
