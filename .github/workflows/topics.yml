@@ -30,20 +30,21 @@ jobs:
           # Get the list of changed topics
           MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topic/ | cut -d '/' -f 3,4,5 | sort -u | paste -d',' -s )
           echo ----------------------------
+          echo $MATRIX
 
           # if no changed topics
           if [[  -z "${MATRIX// }" ]]; then
             echo "No topics were changed"
-            echo "::set-output name=emptyMatrix::true"
-            echo "::set-output name=matrix::[]"
+            echo "emptyMatrix=true" >> $GITHUB_OUTPUT
+            echo "matrix=[]" >> $GITHUB_OUTPUT
           else
             JSON=$(jq -c -n --arg v $MATRIX '[($v|split(","))[] | {namespace: .|split("/")[0], environment: .|split("/")[1], topic: .|split("/")[2]}]')
           
             echo "Changed topics: $MATRIX"
             echo "JSON matrix: $JSON"
           
-            echo "::set-output name=matrix::$JSON"
-            echo "::set-output name=emptyMatrix::false"
+            echo "matrix=$JSON" >> $GITHUB_OUTPUT
+            echo "emptyMatrix=false" >> $GITHUB_OUTPUT
           fi
 
   # ----------------------------- #
@@ -69,9 +70,9 @@ jobs:
       - name: Set Cluster
         run: |
           if [ ${{ matrix.environment }} == 'dev' ]; then
-            echo "::set-output name=cluster::dev-gcp"
+            echo "cluster=dev-gcp" >> $GITHUB_OUTPUT
           elif [ ${{ matrix.environment }} == 'prod' ]; then
-            echo "::set-output name=cluster::prod-gcp"
+            echo "cluster=prod-gcp" >> $GITHUB_OUTPUT
           else
             echo "Unknown environment: ${{ matrix.environment }}"
             exit 1
