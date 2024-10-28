@@ -28,7 +28,7 @@ jobs:
         id: set-matrix
         run: |
           # Get the list of changed topics
-          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topics/ | cut -d '/' -f 3,4,5 | sort -u | paste -d',' -s )
+          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topic/ | cut -d '/' -f 3,4,5 | sort -u | paste -d',' -s )
           echo ----------------------------
 
           # if no changed topics
@@ -83,5 +83,5 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{ steps.set-cluster.outputs.cluster }}
-          RESOURCE: .topics/${{ matrix.namespace }}/${{ matrix.environment }}/${{ matrix.topic }}.yaml
+          RESOURCE: .topic/${{ matrix.namespace }}/${{ matrix.environment }}/${{ matrix.topic }}.yaml
           PRINT_PAYLOAD: true
