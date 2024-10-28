@@ -23,6 +23,3 @@ spec:
     - team: teamcrm
       application: sf-bjorntest
       access: readwrite
-    - team: teamcrm
-      application: itestapp2
-      access: readwrite
