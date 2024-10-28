@@ -34,7 +34,7 @@ jobs:
             echo "emptyMatrix=true" >> $GITHUB_OUTPUT
             echo "matrix=[]" >> $GITHUB_OUTPUT
           else
-            JSON=$(jq -c -n --arg v "$MATRIX" '[($v|split(","))[] | {environment: .|split("/")[0], namespace: .|split("/")[1], topic: .|split("/")[2] | split(".")[0]}]')
+            JSON=$(jq -c -n --arg v "$MATRIX" '[($v|split(","))[] | {namespace: .|split("/")[0], environment: .|split("/")[1], topic: .|split("/")[2] | split(".")[0]}]')
 
             echo "Changed topics: $MATRIX"
             echo "JSON matrix: $JSON"
