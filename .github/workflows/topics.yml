@@ -1,0 +1,87 @@
+name: Deploy Kafka Topics to Aiven
+
+on:
+  push:
+    paths:
+      - .topics/**
+
+jobs:
+  # ----------------------------- #
+  # ------- setup matrix -------- #
+  # ----------------------------- #
+
+  setup-matrix:
+    name: Setup Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      emptyMatrix: ${{ steps.set-matrix.outputs.emptyMatrix }}
+    steps:
+      # Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # set matrix
+      - name: Set Matrix
+        id: set-matrix
+        run: |
+          # Get the list of changed topics
+          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topics/ | cut -d '/' -f 3,4,5 | sort -u | paste -d',' -s )
+          echo ----------------------------
+
+          # if no changed topics
+          if [[  -z "${MATRIX// }" ]]; then
+            echo "No topics were changed"
+            echo "::set-output name=emptyMatrix::true"
+            echo "::set-output name=matrix::[]"
+          else
+            JSON=$(jq -c -n --arg v $MATRIX '[($v|split(","))[] | {namespace: .|split("/")[0], environment: .|split("/")[1], topic: .|split("/")[2]}]')
+          
+            echo "Changed topics: $MATRIX"
+            echo "JSON matrix: $JSON"
+          
+            echo "::set-output name=matrix::$JSON"
+            echo "::set-output name=emptyMatrix::false"
+          fi
+
+  # ----------------------------- #
+  # -------- deploy topics ------ #
+  # ----------------------------- #
+
+  deploy-topics:
+    name: Deploy Topics
+    needs: setup-matrix
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    if: needs.setup-matrix.outputs.emptyMatrix == 'false'
+    strategy:
+      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+    steps:
+      # checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set cluster based on environment
+      - name: Set Cluster
+        run: |
+          if [ ${{ matrix.environment }} == 'dev' ]; then
+            echo "::set-output name=cluster::dev-gcp"
+          elif [ ${{ matrix.environment }} == 'prod' ]; then
+            echo "::set-output name=cluster::prod-gcp"
+          else
+            echo "Unknown environment: ${{ matrix.environment }}"
+            exit 1
+          fi
+        id: set-cluster
+
+      # deploy to appropriate cluster
+      - name: Deploy to Cluster
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: ${{ steps.set-cluster.outputs.cluster }}
+          RESOURCE: .topics/${{ matrix.namespace }}/${{ matrix.environment }}/${{ matrix.topic }}.yaml
+          PRINT_PAYLOAD: true
