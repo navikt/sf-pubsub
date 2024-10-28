@@ -1,6 +1,9 @@
 name: Preconfigured run on push
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - .topic/**
 
 jobs:
   build-deploy:
