@@ -29,3 +29,6 @@ spec:
     - team: team-dialog
       application: sf-dvh
       access: read
+    - team: teamcrm
+      application: itestapp
+      access: readwrite
