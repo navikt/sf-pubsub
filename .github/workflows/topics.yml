@@ -28,23 +28,22 @@ jobs:
         id: set-matrix
         run: |
           # Get the list of changed topics
-          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topic/ | cut -d '/' -f 3,4,5 | sort -u | paste -d',' -s )
+          MATRIX=$(git diff-tree --diff-filter=d --no-commit-id --name-only -r ${{ github.event.before }} ${{ github.sha }} | grep .topic/ | cut -d '/' -f 2,3,4 | sort -u | paste -d',' -s)
           echo ----------------------------
-          echo $MATRIX
 
-          # if no changed topics
+          # If no changed topics
           if [[  -z "${MATRIX// }" ]]; then
             echo "No topics were changed"
-            echo "emptyMatrix=true" >> $GITHUB_OUTPUT
-            echo "matrix=[]" >> $GITHUB_OUTPUT
+            echo "::set-output name=emptyMatrix::true"
+            echo "::set-output name=matrix::[]"
           else
-            JSON=$(jq -c -n --arg v $MATRIX '[($v|split(","))[] | {namespace: .|split("/")[0], environment: .|split("/")[1], topic: .|split("/")[2]}]')
-          
+            JSON=$(jq -c -n --arg v $MATRIX '[($v|split(","))[] | {namespace: .|split("/")[0], environment: .|split("/")[1], topic: .|split("/")[2]|split(".")[0]}]')
+               
             echo "Changed topics: $MATRIX"
             echo "JSON matrix: $JSON"
-          
-            echo "matrix=$JSON" >> $GITHUB_OUTPUT
-            echo "emptyMatrix=false" >> $GITHUB_OUTPUT
+               
+            echo "::set-output name=matrix::$JSON"
+            echo "::set-output name=emptyMatrix::false"
           fi
 
   # ----------------------------- #
