@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - .topic/**
-      - .github/workflows/topics.yml
 
 jobs:
   # ----------------------------- #
