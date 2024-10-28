@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - .topic/**
+      - .github/workflows/topics.yml
 
 jobs:
   build-deploy:
