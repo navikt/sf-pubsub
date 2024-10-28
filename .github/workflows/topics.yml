@@ -14,9 +14,6 @@ jobs:
   setup-matrix:
     name: Setup Matrix
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-      emptyMatrix: ${{ steps.set-matrix.outputs.emptyMatrix }}
     steps:
       # Checkout
       - name: Checkout code
@@ -46,13 +43,16 @@ jobs:
             echo "matrix=$JSON" >> $GITHUB_OUTPUT
             echo "emptyMatrix=false" >> $GITHUB_OUTPUT
           fi
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      emptyMatrix: ${{ steps.set-matrix.outputs.emptyMatrix }}
 
   # ----------------------------- #
   # -------- deploy topics ------ #
   # ----------------------------- #
 
   deploy-topics:
-    name: Deploy Topics
+    name: Deploy ${{ matrix.target.namespace }}.${{ matrix.target.topic }} in ${{ matrix.target.environment }}
     needs: setup-matrix
     runs-on: ubuntu-latest
     permissions:
@@ -60,7 +60,8 @@ jobs:
       contents: read
     if: needs.setup-matrix.outputs.emptyMatrix == 'false'
     strategy:
-      matrix: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+      matrix:
+        target: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     steps:
       # checkout code
       - name: Checkout code
@@ -69,12 +70,12 @@ jobs:
       # Set cluster based on environment
       - name: Set Cluster
         run: |
-          if [ ${{ matrix.environment }} == 'dev' ]; then
+          if [ ${{ matrix.target.environment }} == 'dev' ]; then
             echo "cluster=dev-gcp" >> $GITHUB_OUTPUT
-          elif [ ${{ matrix.environment }} == 'prod' ]; then
+          elif [ ${{ matrix.target.environment }} == 'prod' ]; then
             echo "cluster=prod-gcp" >> $GITHUB_OUTPUT
           else
-            echo "Unknown environment: ${{ matrix.environment }}"
+            echo "Unknown environment: ${{ matrix.target.environment }}"
             exit 1
           fi
         id: set-cluster
@@ -84,5 +85,5 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: ${{ steps.set-cluster.outputs.cluster }}
-          RESOURCE: .topic/${{ matrix.namespace }}/${{ matrix.environment }}/${{ matrix.topic }}.yaml
+          RESOURCE: .topic/${{ matrix.target.namespace }}/${{ matrix.target.environment }}/${{ matrix.target.topic }}.yaml
           PRINT_PAYLOAD: true
