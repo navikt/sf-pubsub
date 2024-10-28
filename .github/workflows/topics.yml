@@ -3,7 +3,7 @@ name: Deploy Kafka Topics to Aiven
 on:
   push:
     paths:
-      - .topics/**
+      - .topic/**
 
 jobs:
   # ----------------------------- #
