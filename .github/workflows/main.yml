@@ -3,6 +3,7 @@ name: Preconfigured run on push
 on:
   push:
     paths-ignore:
+      - README.md
       - .topic/**
       - .github/workflows/topics.yml
 
