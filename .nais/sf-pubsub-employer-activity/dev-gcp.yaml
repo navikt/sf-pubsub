@@ -1,6 +1,6 @@
 spec:
   ingresses:
-    - "https://sf-tag-employer-activity.intern.dev.nav.no"
+    - "https://sf-pubsub-employer-activity.intern.dev.nav.no"
   env:
     - name: WHITELIST_FILE
       value: '/whitelist/employer-activity/dev.json'

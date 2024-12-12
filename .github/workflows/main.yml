@@ -15,5 +15,5 @@ jobs:
       contents: write
     secrets: inherit
     with:
-      DEPLOY_APP: sf-tag-employer-activity     # use ALL to deploy all apps in cluster
+      DEPLOY_APP: sf-pubsub-employer-activity     # use ALL to deploy all apps in cluster
       DEPLOY_CLUSTER: dev-gcp
