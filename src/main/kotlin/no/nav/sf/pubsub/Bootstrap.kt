@@ -8,7 +8,7 @@ val application: Application = if (isLocal) {
     Application(localRecordHandler) // For local testing
 } else {
     when (env(config_DEPLOY_APP)) {
-        "sf-pubsub-task" -> Application(changeDataCaptureKafkaRecordHandler)
+        "sf-tag-employer-activity" -> Application(changeDataCaptureKafkaRecordHandler)
         "sf-pubsub-bjornmessage" -> Application(randomUUIDKafkaRecordHandler)
         else -> Application(changeDataCaptureKafkaRecordHandler)
         // TODO if we want to force declaration of new app: (For now only CDC - so assuming that by default)

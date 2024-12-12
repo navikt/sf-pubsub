@@ -1,0 +1,10 @@
+spec:
+  ingresses:
+    - "https://sf-tag-employer-activity.intern.dev.nav.no"
+  env:
+    - name: WHITELIST_FILE
+      value: '/whitelist/employer-activity/dev.json'
+    - name: KAFKA_TOPIC
+      value: 'team-dialog.employer-activity'
+    - name: SALESFORCE_TOPIC
+      value: '/data/TaskChangeEvent'
