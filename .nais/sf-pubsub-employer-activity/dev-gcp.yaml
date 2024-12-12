@@ -7,4 +7,4 @@ spec:
     - name: KAFKA_TOPIC
       value: 'team-dialog.employer-activity'
     - name: SALESFORCE_TOPIC
-      value: '/data/TaskChangeEvent'
+      value: '/event/PubSub_Event__e'
