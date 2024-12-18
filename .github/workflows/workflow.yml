@@ -15,7 +15,7 @@ on:
 jobs:
   run-info:
     name: >- # Displays inputs as name on job
-      ${{ inputs.DEPLOY_APP }} - ${{ inputs.DEPLOY_CLUSTER }}
+      ${{ inputs.DEPLOY_APP }} - ${{ inputs.DEPLOY_CLUSTER }} - ${{ inputs.DEPLOY_NAMESPACE }}
     runs-on: ubuntu-latest
     steps:
       - name: Dump github context
@@ -94,7 +94,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   deploy:
-    name: Deploy ${{ matrix.target.app }} to ${{ inputs.DEPLOY_CLUSTER }}
+    name: Deploy ${{ matrix.target.app }} to ${{ inputs.DEPLOY_CLUSTER }} - ${{ inputs.DEPLOY_NAMESPACE}}
     needs: [ build, setup-matrix ]
     runs-on: ubuntu-latest
     strategy:

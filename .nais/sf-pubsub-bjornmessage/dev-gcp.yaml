@@ -3,8 +3,6 @@ metadata:
   labels:
     team: team-dialog
 spec:
-  ingresses:
-    - "https://sf-pubsub-bjornmessage.intern.dev.nav.no"
   env:
     - name: WHITELIST_FILE
       value: '/whitelist/bjorn-message/dev.json'
