@@ -8,6 +8,7 @@ import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
+import java.io.File
 import java.lang.RuntimeException
 import java.util.UUID
 
@@ -34,6 +35,7 @@ val silentRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
+    // File("/tmp/latestRecord").writeText(it)
     val jsonObject = it.asJsonObject()
     val onlyOneId = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").size() == 1
     if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
@@ -50,6 +52,7 @@ val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
+    File("/tmp/latestRecord").writeText(it.asJsonObject().toString())
     val jsonObject = it.asJsonObject()
     val id = UUID.randomUUID().toString()
     val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))

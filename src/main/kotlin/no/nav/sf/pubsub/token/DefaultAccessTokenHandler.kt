@@ -94,7 +94,6 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
                     val accessTokenResponse = gson.fromJson(response.bodyString(), AccessTokenResponse::class.java)
                     lastTokenTriplet = Triple(accessTokenResponse.access_token, accessTokenResponse.instance_url, accessTokenResponse.id.split("/")[4])
                     expireTime = System.currentTimeMillis() + 600000 // (expireMomentSinceEpochInSeconds - 10) * 1000
-                    // println("$accessTokenResponse")
                     // println("UPDATE triple $lastTokenTriplet")
                     return lastTokenTriplet
                 }
