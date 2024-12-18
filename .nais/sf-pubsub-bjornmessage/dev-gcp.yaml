@@ -1,3 +1,7 @@
+metadata:
+  namespace: team-dialog
+  labels:
+    team: team-dialog
 spec:
   ingresses:
     - "https://sf-pubsub-bjornmessage.intern.dev.nav.no"
