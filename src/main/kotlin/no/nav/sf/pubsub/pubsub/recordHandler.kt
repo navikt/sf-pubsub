@@ -8,6 +8,7 @@ import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
+import java.io.File
 import java.lang.RuntimeException
 import java.util.UUID
 
