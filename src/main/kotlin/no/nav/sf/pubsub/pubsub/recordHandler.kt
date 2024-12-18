@@ -34,6 +34,7 @@ val silentRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
+    // File("/tmp/latestRecord").writeText(it)
     val jsonObject = it.asJsonObject()
     val onlyOneId = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").size() == 1
     if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
@@ -50,6 +51,7 @@ val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
+    File("/tmp/latestRecord").writeText(it)
     val jsonObject = it.asJsonObject()
     val id = UUID.randomUUID().toString()
     val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
