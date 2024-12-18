@@ -9,6 +9,9 @@ on:
       DEPLOY_CLUSTER:
         required: true
         type: string
+      DEPLOY_NAMESPACE:
+        required: true
+        type: string
 jobs:
   run-info:
     name: >- # Displays inputs as name on job
@@ -61,6 +64,7 @@ jobs:
         uses: nais/docker-build-push@v0
         id: docker-push
         with:
+          team: ${{ inputs.DEPLOY_NAMESPACE }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
 #      - name: Create image URL artifact
