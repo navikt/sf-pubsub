@@ -1,6 +1,8 @@
+metadata:
+  namespace: team-dialog
+  labels:
+    team: team-dialog
 spec:
-  ingresses:
-    - "https://sf-pubsub-employer-activity.intern.dev.nav.no"
   env:
     - name: WHITELIST_FILE
       value: '/whitelist/employer-activity/dev.json'
