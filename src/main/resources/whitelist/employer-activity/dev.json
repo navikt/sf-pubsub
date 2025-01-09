@@ -10,7 +10,7 @@
   "AccountOrgType__c": "ALL",
   "AccountParentId__c": "ALL",
   "AccountParentOrgNumber__c": "ALL",
-  "ActivityDate__c": "ALL",
+  "ActivityDate__c": "DATE_FROM_MILLIS",
   "ActivityType__c": "ALL",
   "DurationInMinutes__c": "ALL",
   "EndDateTime__c": "DATE_FROM_MILLIS",
