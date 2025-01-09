@@ -1,0 +1,12 @@
+metadata:
+  namespace: team-dialog
+  labels:
+    team: team-dialog
+spec:
+  env:
+    - name: WHITELIST_FILE
+      value: '/whitelist/employer-activity/prod.json'
+    - name: KAFKA_TOPIC
+      value: 'team-dialog.employer-activity'
+    - name: SALESFORCE_TOPIC
+      value: '/event/EmployerActivityEvent__e'
