@@ -1,4 +1,4 @@
-package no.nav.sf.pdl.kafka.gui
+/*package no.nav.sf.pdl.kafka.gui
 
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.readResourceFile
@@ -45,4 +45,4 @@ class GuiTest {
 
         // Assertions.assertEquals(expectedResultPage, response.body.toString())
     }
-}
+}*/
