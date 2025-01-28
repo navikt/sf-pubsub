@@ -2,7 +2,6 @@
   "EventUuid": "ALL",
   "ReplayId": "ALL",
   "CreatedById": "ALL",
-  "CreatedDate": "DATE_FROM_MILLIS",
   "EventObject__c": "ALL",
   "EventType__c": "ALL",
   "AccountNavUnit__c": "ALL",
