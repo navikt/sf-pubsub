@@ -29,6 +29,6 @@ spec:
     - team: team-dialog
       application: sf-dvh
       access: read
-    - application: lydia-api
-      namespace: pia
+    - team: pia
+      application: lydia-api
       access: read
