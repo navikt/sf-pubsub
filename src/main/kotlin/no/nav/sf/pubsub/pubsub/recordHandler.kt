@@ -4,7 +4,12 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import mu.KotlinLogging
+import mu.withLoggingContext
+import no.nav.sf.pubsub.Metrics
 import no.nav.sf.pubsub.kafka.Kafka
+import no.nav.sf.pubsub.logs.EventTypeSecureLog
+import no.nav.sf.pubsub.logs.SECURE
+import no.nav.sf.pubsub.logs.generateLoggingContextForSecureLogs
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -63,6 +68,35 @@ val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
     } catch (e: Throwable) {
         e.printStackTrace()
         false
+    }
+}
+
+fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Boolean {
+    Metrics.logCounter = Metrics.registerLabelCounter("log", *eventType.fieldsToUseAsMetricLabels.toTypedArray())
+    return {
+        try {
+            val obj = it.asJsonObject()
+            val loggingContext = eventType.generateLoggingContextForSecureLogs(obj)
+
+            if (eventType.fieldForLogLevelFilter == null ||
+                obj[eventType.fieldForLogLevelFilter].asString == "Error" ||
+                obj[eventType.fieldForLogLevelFilter].asString == "Critical"
+            ) {
+                val logMessage = obj[eventType.messageField]?.asString ?: "N/A"
+                withLoggingContext(loggingContext) {
+                    log.error(SECURE, logMessage)
+                }
+            }
+            val metricLabelValues = eventType.fieldsToUseAsMetricLabels.map { key ->
+                val value = obj[key]
+                if (value.isJsonNull) "" else value.asString
+            }
+            Metrics.logCounter!!.labels(*metricLabelValues.toTypedArray()).inc()
+            true
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            false
+        }
     }
 }
 

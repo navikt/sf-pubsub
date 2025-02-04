@@ -1,18 +1,20 @@
 package no.nav.sf.pubsub
 
-import no.nav.sf.pubsub.pubsub.changeDataCaptureKafkaRecordHandler
+import no.nav.sf.pubsub.logs.EventTypeSecureLog
 import no.nav.sf.pubsub.pubsub.localRecordHandler
 import no.nav.sf.pubsub.pubsub.randomUUIDKafkaRecordHandler
+import no.nav.sf.pubsub.pubsub.secureLogRecordHandler
 
 val application: Application = if (isLocal) {
+    // Application(secureLogRecordHandler(EventTypeSecureLog.ApplicationEvent))
     Application(localRecordHandler) // For local testing
 } else {
     when (env(config_DEPLOY_APP)) {
         "sf-pubsub-employer-activity" -> Application(randomUUIDKafkaRecordHandler)
         "sf-pubsub-bjornmessage" -> Application(randomUUIDKafkaRecordHandler)
-        else -> Application(changeDataCaptureKafkaRecordHandler)
-        // TODO if we want to force declaration of new app: (For now only CDC - so assuming that by default)
-        // else -> throw RuntimeException("Attempted to deploy unknown app"
+        "sf-pubsub-application-event" -> Application(secureLogRecordHandler(EventTypeSecureLog.ApplicationEvent))
+        else -> throw RuntimeException("Attempted to deploy unknown app")
+        // changeDataCaptureKafkaRecordHandler <- example of CDC handler
     }
 }
 
