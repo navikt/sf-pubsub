@@ -57,6 +57,9 @@ spec:
   redis:
     - instance: replay
       access: readwrite
+  valkey:
+    - instance: replay
+      access: readwrite
   envFrom:
     - secret: sf-pubsub-prod
   env:
