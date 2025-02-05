@@ -8,6 +8,8 @@ metadata:
 spec:
   image: "{{ image }}"
   port: 8080
+  secureLogs:
+    enabled: true
   replicas:
     min: 1
     max: 1
@@ -54,9 +56,6 @@ spec:
             - port: 7443
   kafka:
     pool: nav-dev
-  redis:
-    - instance: replay
-      access: readwrite
   valkey:
     - instance: replay
       access: readwrite
