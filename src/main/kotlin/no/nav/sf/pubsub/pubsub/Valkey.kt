@@ -39,6 +39,7 @@ object Valkey {
                 }
                 log.info { "Initial check query time $queryTime ms" }
                 if (queryTime < 100) {
+                    latch.countDown()
                     initialCheckPassed = true
                 }
                 false
