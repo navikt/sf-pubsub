@@ -1,21 +1,6 @@
 package no.nav.sf.pubsub.pubsub
 
-import com.google.protobuf.ByteString
-import io.lettuce.core.RedisClient
-import io.lettuce.core.RedisURI
-import io.lettuce.core.SetArgs
-import io.lettuce.core.StaticCredentialsProvider
-import io.lettuce.core.api.StatefulRedisConnection
-import io.lettuce.core.api.sync.RedisCommands
-import mu.KotlinLogging
-import no.nav.sf.pubsub.env
-import no.nav.sf.pubsub.env_NAIS_APP_NAME
-import no.nav.sf.pubsub.env_REDIS_PASSWORD_REPLAY
-import no.nav.sf.pubsub.env_REDIS_URI_REPLAY
-import no.nav.sf.pubsub.env_REDIS_USERNAME_REPLAY
-import java.util.Base64
-import java.util.concurrent.CountDownLatch
-
+/*
 object Redis {
     private val log = KotlinLogging.logger { }
 
@@ -58,3 +43,5 @@ object Redis {
 
     fun dbSize(): Long = commands.dbsize()
 }
+
+ */
