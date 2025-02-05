@@ -54,9 +54,6 @@ spec:
             - port: 7443
   kafka:
     pool: nav-prod
-  redis:
-    - instance: replay
-      access: readwrite
   valkey:
     - instance: replay
       access: readwrite
