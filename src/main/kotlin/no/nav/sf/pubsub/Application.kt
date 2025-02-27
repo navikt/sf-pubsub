@@ -42,8 +42,10 @@ class Application(val recordHandler: (GenericRecord) -> Boolean) {
         val replayPreset = if (useValkey) {
             Valkey.latch.await() // Wait for valkey initialization to be done, and possibly replayId fetched from store
             if (Valkey.lastReplayId == null) {
-                log.info { "Valkey in use, no replay ID found, will read LATEST" }
-                ReplayPreset.LATEST
+                // log.info { "Valkey in use, no replay ID found, will read LATEST" }
+                // ReplayPreset.LATEST
+                log.info { "Valkey in use, no replay ID found, will read EARLIEST (!)" }
+                ReplayPreset.EARLIEST
             } else {
                 log.info { "Valkey in use, replay ID found, will read from (not including) replay ID" }
                 ReplayPreset.CUSTOM
