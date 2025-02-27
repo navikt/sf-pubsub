@@ -1,5 +1,6 @@
 package no.nav.sf.pubsub.pubsub
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -20,6 +21,7 @@ import java.util.UUID
 private val log = KotlinLogging.logger { }
 
 val gsonPrettyPrinter = GsonBuilder().setPrettyPrinting().serializeNulls().create()
+val gson = Gson()
 
 val localRecordHandler: (GenericRecord) -> Boolean = {
     log.info { "Local record handler handles a record" }
@@ -31,6 +33,7 @@ val localRecordHandler: (GenericRecord) -> Boolean = {
     // val id = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").first().asString
 
     log.debug { "Processed record prettified:\n${gsonPrettyPrinter.toJson(jsonObject)}" }
+    println(gsonPrettyPrinter.toJson(jsonObject))
     log.info { "Successfully processed a record" }
     true
 }
@@ -69,6 +72,12 @@ val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
         e.printStackTrace()
         false
     }
+}
+
+val appendToPodFileHandler: (GenericRecord) -> Boolean = {
+    val jsonObject = it.asJsonObject()
+    File("/tmp/events").appendText(gson.toJson(jsonObject) + "\n\n")
+    true
 }
 
 fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Boolean {

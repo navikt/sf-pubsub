@@ -1,0 +1,4 @@
+spec:
+  env:
+    - name: SALESFORCE_TOPIC
+      value: '/event/ConcurLongRunApexErrEvent'
