@@ -19,6 +19,7 @@
   "EndDateTime__c": "DATE_FROM_MILLIS",
   "IACaseNumber__c": "ALL",
   "IACooperationId__c": "ALL",
+  "IAPlanId__c": "ALL",
   "IASubtheme__c": "ALL",
   "Id__c": "ALL",
   "LastModifiedById__c": "ALL",
