@@ -16,8 +16,7 @@ import java.util.Properties
 object Kafka {
     val topic = env(config_KAFKA_TOPIC)
 
-    val kafkaProducer
-        get() = KafkaProducer<String, String>(propertiesBase)
+    val kafkaProducer = KafkaProducer<String, String>(propertiesBase)
 
     private const val clientId = "sf-pubsub"
 
