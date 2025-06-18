@@ -13,8 +13,8 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.SERVICE_UNAVAILABLE
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import org.http4k.server.ApacheServer
 import org.http4k.server.Http4kServer
+import org.http4k.server.Netty
 import org.http4k.server.asServer
 
 val useValkey = !isLocal
@@ -27,7 +27,7 @@ class Application(val recordHandler: (GenericRecord) -> Boolean) {
 
     private lateinit var pubSubClient: PubSubClient
 
-    fun apiServer(port: Int): Http4kServer = api().asServer(ApacheServer(port))
+    fun apiServer(port: Int): Http4kServer = api().asServer(Netty(port))
 
     fun api(): HttpHandler = routes(
         "/internal/isAlive" bind Method.GET to isAliveHandler,
