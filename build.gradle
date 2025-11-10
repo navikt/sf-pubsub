@@ -38,18 +38,6 @@ repositories {
     maven {
         url "https://packages.confluent.io/maven"
     }
-//
-//    ["maven-release"].each { repo ->
-//        String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubPassword")
-//        if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or githubPassword")
-//        maven {
-//            url = uri("https://maven.pkg.github.com/navikt/$repo")
-//            credentials {
-//                username = 'x-access-token'
-//                password = token
-//            }
-//        }
-//    }
 }
 
 dependencies {
@@ -62,12 +50,14 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.68.0'
     implementation 'io.grpc:grpc-auth:1.68.0'
 
+    implementation 'io.netty:netty-codec:4.1.125.Final' //Transitive for grpc-netty
+
     implementation 'io.lettuce:lettuce-core:6.5.3.RELEASE'
 
     implementation "org.apache.kafka:kafka-clients:3.9.1"
 
     // Avro core library
-    implementation 'org.apache.avro:avro:1.11.5'
+    implementation 'org.apache.avro:avro:1.12.1'
 
     implementation 'org.yaml:snakeyaml:2.0'
 
