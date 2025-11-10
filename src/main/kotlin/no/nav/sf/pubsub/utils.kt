@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package no.nav.sf.pubsub
 
 import com.google.protobuf.ByteString

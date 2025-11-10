@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package no.nav.sf.pubsub
 
 import com.google.gson.JsonArray
@@ -20,7 +22,7 @@ val whitelistObjectCache: JsonObject by lazy {
 
 fun reduceByWhitelist(
     json: String?,
-    whitelistOverride: String? = null // Used for Junit test
+    whitelistOverride: String? = null, // Used for Junit test
 ): String? {
     if (json == null) {
         File("/tmp/nulls").appendText("Null at $currentTimeTag\n")
@@ -28,17 +30,18 @@ fun reduceByWhitelist(
     }
     try {
         val messageObject = JsonParser.parseString(json) as JsonObject
-        val whitelistObject = if (whitelistOverride != null) {
-            JsonParser.parseString(whitelistOverride) as JsonObject // Used for Junit tests
-        } else {
-            whitelistObjectCache
-        }
+        val whitelistObject =
+            if (whitelistOverride != null) {
+                JsonParser.parseString(whitelistOverride) as JsonObject // Used for Junit tests
+            } else {
+                whitelistObjectCache
+            }
 
         val longToInstantStringTransformList: MutableSet<List<String>> = mutableSetOf()
         val removeList = findNonWhitelistedFields(whitelistObject, messageObject, longToInstantStringTransformList)
 
         File("/tmp/latestDroppedFields").writeText(
-            removeList.map { it.joinToString(".") }.joinToString("\n")
+            removeList.map { it.joinToString(".") }.joinToString("\n"),
         )
 
         val allList = listAllFields(messageObject)
@@ -80,32 +83,40 @@ private fun findNonWhitelistedFields(
 ): Set<List<String>> {
     val whitelistEntrySet = (whitelistElement as JsonObject).entrySet()
 
-    val messageEntrySet = if (messageElement is JsonArray) {
-        messageElement.map { it as JsonObject }.flatMap { it.entrySet() }.toSet()
-    } else { (messageElement as JsonObject).entrySet() }
+    val messageEntrySet =
+        if (messageElement is JsonArray) {
+            messageElement.map { it as JsonObject }.flatMap { it.entrySet() }.toSet()
+        } else {
+            (messageElement as JsonObject).entrySet()
+        }
 
     // Whitelist field with primitive value (typically "ALL") means allow field plus any subfields
-    val whitelistPrimitives = whitelistEntrySet.filter { it.value is JsonPrimitive }.map {
-        if (it.value.asString == "DATE_FROM_MILLIS") {
-            longToInstantStringTransformList.add(parents + it.key)
-        }
-        it.key
-    }.toList()
+    val whitelistPrimitives =
+        whitelistEntrySet
+            .filter { it.value is JsonPrimitive }
+            .map {
+                if (it.value.asString == "DATE_FROM_MILLIS") {
+                    longToInstantStringTransformList.add(parents + it.key)
+                }
+                it.key
+            }.toList()
 
     // Whitelist fields that contains another json object, means allow top field and the subobject will
     // describe what parts to allow for any subfields
     val whitelistObjects = whitelistEntrySet.filter { it.value is JsonObject }.map { it.key }.toList()
 
-    val removeList = messageEntrySet.filter { entry ->
-        // Never remove if fields is whitelisted as "ALL"
-        if (whitelistPrimitives.contains(entry.key)) return@filter false
+    val removeList =
+        messageEntrySet
+            .filter { entry ->
+                // Never remove if fields is whitelisted as "ALL"
+                if (whitelistPrimitives.contains(entry.key)) return@filter false
 
-        // If not whitelisted as "ALL", remove any primitives and null
-        if (entry.value is JsonPrimitive || entry.value is JsonNull) return@filter true
+                // If not whitelisted as "ALL", remove any primitives and null
+                if (entry.value is JsonPrimitive || entry.value is JsonNull) return@filter true
 
-        // If field is object or array, only keep it if member of object whitelist
-        !whitelistObjects.contains(entry.key)
-    }.map { parents + it.key }
+                // If field is object or array, only keep it if member of object whitelist
+                !whitelistObjects.contains(entry.key)
+            }.map { parents + it.key }
 
     resultHolder.addAll(removeList)
 
@@ -139,9 +150,10 @@ private fun JsonElement.removeFields(fieldTree: List<String>) {
     if (fieldTree.size == 1) {
         when (this) {
             is JsonObject -> this.remove(fieldTree.first())
-            is JsonArray -> this.forEach {
-                (it as JsonObject).remove(fieldTree.first())
-            }
+            is JsonArray ->
+                this.forEach {
+                    (it as JsonObject).remove(fieldTree.first())
+                }
             else -> {
                 throw IllegalStateException("JsonElement.removeFieldRecurse attempted removing a primitive or null")
             }
@@ -149,9 +161,10 @@ private fun JsonElement.removeFields(fieldTree: List<String>) {
     } else {
         when (this) {
             is JsonObject -> this.get(fieldTree.first()).removeFields(fieldTree.subList(1, fieldTree.size))
-            is JsonArray -> this.forEach {
-                (it as JsonObject).get(fieldTree.first()).removeFields(fieldTree.subList(1, fieldTree.size))
-            }
+            is JsonArray ->
+                this.forEach {
+                    (it as JsonObject).get(fieldTree.first()).removeFields(fieldTree.subList(1, fieldTree.size))
+                }
             else -> {
                 throw IllegalStateException("JsonElement.removeFieldRecurse attempted stepping into a primitive or null")
             }
@@ -174,9 +187,11 @@ private fun JsonElement.transformField(fieldTree: List<String>) {
                 if (primitive.isNumber) {
                     val millis = primitive.asLong
                     // Convert the millis to a formatted date string
-                    val formattedDate = Instant.ofEpochMilli(millis)
-                        .atZone(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_INSTANT)
+                    val formattedDate =
+                        Instant
+                            .ofEpochMilli(millis)
+                            .atZone(ZoneOffset.UTC)
+                            .format(DateTimeFormatter.ISO_INSTANT)
                     // Replace the Long with the formatted string
                     this.addProperty(fieldName, formattedDate)
                 }
@@ -202,13 +217,14 @@ private fun JsonElement.transformField(fieldTree: List<String>) {
 private fun listAllFields(
     messageElement: JsonElement,
     resultHolder: MutableSet<List<String>> = mutableSetOf(),
-    parents: List<String> = listOf()
+    parents: List<String> = listOf(),
 ): Set<List<String>> {
-    val messageEntrySet = if (messageElement is JsonArray) {
-        messageElement.filterIsInstance<JsonObject>().flatMap { it.entrySet() }.toSet()
-    } else {
-        (messageElement as JsonObject).entrySet()
-    }
+    val messageEntrySet =
+        if (messageElement is JsonArray) {
+            messageElement.filterIsInstance<JsonObject>().flatMap { it.entrySet() }.toSet()
+        } else {
+            (messageElement as JsonObject).entrySet()
+        }
 
     val list = messageEntrySet.map { parents + it.key }
 
@@ -220,7 +236,7 @@ private fun listAllFields(
             listAllFields(
                 it.value,
                 resultHolder,
-                parents.toList() + it.key
+                parents.toList() + it.key,
             )
         }
     return resultHolder

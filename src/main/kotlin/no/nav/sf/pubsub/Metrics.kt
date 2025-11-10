@@ -22,22 +22,46 @@ object Metrics {
     var logCounter: Counter? = null // placeholder for logEventHandlers
 
     fun registerCounter(name: String) =
-        Counter.build().name(name).help(name).register()
+        Counter
+            .build()
+            .name(name)
+            .help(name)
+            .register()
 
     fun registerGauge(name: String) =
-        Gauge.build().name(name).help(name).register()
+        Gauge
+            .build()
+            .name(name)
+            .help(name)
+            .register()
 
-    fun registerLabelGauge(name: String, vararg labels: String) =
-        Gauge.build().name(name).help(name).labelNames(*labels).register()
+    fun registerLabelGauge(
+        name: String,
+        vararg labels: String,
+    ) = Gauge
+        .build()
+        .name(name)
+        .help(name)
+        .labelNames(*labels)
+        .register()
 
-    fun registerLabelCounter(name: String, vararg labels: String) =
-        Counter.build().name(name).help(name).labelNames(*labels).register()
+    fun registerLabelCounter(
+        name: String,
+        vararg labels: String,
+    ) = Counter
+        .build()
+        .name(name)
+        .help(name)
+        .labelNames(*labels)
+        .register()
 
     val metricsHandler: HttpHandler = {
         try {
-            val metricsString = StringWriter().apply {
-                TextFormat.write004(this, cRegistry.metricFamilySamples())
-            }.toString()
+            val metricsString =
+                StringWriter()
+                    .apply {
+                        TextFormat.write004(this, cRegistry.metricFamilySamples())
+                    }.toString()
             if (metricsString.isNotEmpty()) {
                 Response(Status.OK).body(metricsString)
             } else {

@@ -10,7 +10,8 @@ import java.lang.IllegalStateException
 
 object Gui {
     val prettifier: Gson = GsonBuilder().setPrettyPrinting().create()
-    var latestMessageAndRemovalAndInstantTransformSets: Triple<Set<List<String>>, Set<List<String>>, Set<List<String>>> = Triple(setOf(), setOf(), setOf())
+    var latestMessageAndRemovalAndInstantTransformSets: Triple<Set<List<String>>, Set<List<String>>, Set<List<String>>> =
+        Triple(setOf(), setOf(), setOf())
 
     val guiHandler: HttpHandler = {
         val latestCompleteMessageModel = parseFieldsListToJsonObject(latestMessageAndRemovalAndInstantTransformSets.first)
@@ -19,8 +20,8 @@ object Gui {
         Response(Status.OK).body(
             generateHTMLFromPrettifiedMarkedJSON(
                 prettifier.toJson(latestMarkedMessageModel),
-                latestMessageAndRemovalAndInstantTransformSets.third.map { it.joinToString(".") }
-            )
+                latestMessageAndRemovalAndInstantTransformSets.third.map { it.joinToString(".") },
+            ),
         )
     }
 
@@ -52,7 +53,12 @@ object Gui {
      * markRemovedFields - a recursive function that takes a message model and a remove model as json objects
      * and produces a marked message model where fields to be removed are marked with a '!' prefix, i.e "!tags"
      */
-    private fun markRemovedFields(message: JsonObject, removeObject: JsonObject, resultHolder: JsonObject = JsonObject(), mark: Boolean = false): JsonObject {
+    private fun markRemovedFields(
+        message: JsonObject,
+        removeObject: JsonObject,
+        resultHolder: JsonObject = JsonObject(),
+        mark: Boolean = false,
+    ): JsonObject {
         for ((key, value) in message.entrySet()) {
             if (value is JsonObject) {
                 val obj = JsonObject()
@@ -73,13 +79,16 @@ object Gui {
      * generateHTMLFromPrettifiedMarkedJSON - takes a prettified json string where field names to be removed starts with '!'
      * and produces html for display
      */
-    private fun generateHTMLFromPrettifiedMarkedJSON(jsonString: String, markedForInstantTransform: List<String>): String {
+    private fun generateHTMLFromPrettifiedMarkedJSON(
+        jsonString: String,
+        markedForInstantTransform: List<String>,
+    ): String {
         val jsonLines = jsonString.split("\n")
         return wrapWithHTMLPage(buildHTMLContentFromJsonLines(jsonLines, markedForInstantTransform))
     }
 
-    private fun wrapWithHTMLPage(content: String): String {
-        return """
+    private fun wrapWithHTMLPage(content: String): String =
+        """
         <html>
         <head>
         <style>
@@ -91,9 +100,11 @@ object Gui {
         </body>
         </html>
         """.trimIndent()
-    }
 
-    private fun buildHTMLContentFromJsonLines(jsonLines: List<String>, markedForInstantTransform: List<String>): String {
+    private fun buildHTMLContentFromJsonLines(
+        jsonLines: List<String>,
+        markedForInstantTransform: List<String>,
+    ): String {
         val htmlContent = StringBuilder()
         htmlContent.append("<pre>")
         for (line in jsonLines) {

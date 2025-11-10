@@ -2,8 +2,8 @@ plugins {
     id 'application'
     id 'java'
 
-    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
-    id 'org.jmailen.kotlinter' version '3.2.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.21'
+    id 'org.jmailen.kotlinter' version '5.2.0'
     id 'com.gradleup.shadow' version '8.3.1'
     id 'com.google.protobuf' version '0.9.4'
 }
@@ -35,22 +35,21 @@ java {
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
         url "https://packages.confluent.io/maven"
     }
-
-    ["maven-release"].each { repo ->
-        String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubPassword")
-        if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or githubPassword")
-        maven {
-            url = uri("https://maven.pkg.github.com/navikt/$repo")
-            credentials {
-                username = 'x-access-token'
-                password = token
-            }
-        }
-    }
+//
+//    ["maven-release"].each { repo ->
+//        String token = System.getenv("GITHUB_TOKEN") ?: project.findProperty("githubPassword")
+//        if (!token) throw new NullPointerException("Missing token, you have to set GITHUB_TOKEN or githubPassword")
+//        maven {
+//            url = uri("https://maven.pkg.github.com/navikt/$repo")
+//            credentials {
+//                username = 'x-access-token'
+//                password = token
+//            }
+//        }
+//    }
 }
 
 dependencies {
@@ -68,33 +67,24 @@ dependencies {
     implementation "org.apache.kafka:kafka-clients:3.9.1"
 
     // Avro core library
-    implementation 'org.apache.avro:avro:1.11.4'
+    implementation 'org.apache.avro:avro:1.11.5'
 
     implementation 'org.yaml:snakeyaml:2.0'
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0"
 
     implementation 'com.google.code.gson:gson:2.11.0'
 
-    implementation "org.http4k:http4k-core:5.14.4.0"
-    implementation "org.http4k:http4k-server-netty:5.14.4.0"
-    implementation "io.netty:netty-handler:4.1.118.Final" //Transient bump
-    implementation "io.netty:netty-common:4.1.118.Final" //Transient bump
-    implementation "org.http4k:http4k-client-okhttp:5.14.4.0"
+    implementation "org.http4k:http4k-core:6.20.1.0"
+    implementation "org.http4k:http4k-server-netty:6.20.1.0"
+    implementation "org.http4k:http4k-client-okhttp:6.20.1.0"
 
     implementation "io.github.microutils:kotlin-logging:1.7.9"
-    implementation "ch.qos.logback:logback-classic:1.5.13"
+    implementation "ch.qos.logback:logback-classic:1.5.20"
     implementation "net.logstash.logback:logstash-logback-encoder:8.1"
 
     implementation "io.prometheus:simpleclient_common:0.8.1"
     implementation "io.prometheus:simpleclient_hotspot:0.8.1"
-
-//    implementation "net.minidev:json-smart:2.4.9" // Desired transient json-smart to token-validation above
-//    implementation "org.apache.commons:commons-compress:1.26.0" //transient http4k-apache
-//    implementation "org.apache.httpcomponents:httpclient:4.5.13" //Desired transient httpclient to http4k-apache
-//
-//    implementation "io.netty:netty-handler:4.1.118.Final"
-//    implementation "io.netty:netty-common:4.1.118.Final"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'

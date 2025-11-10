@@ -19,7 +19,6 @@ import java.util.concurrent.CountDownLatch
 import kotlin.system.measureTimeMillis
 
 object Valkey {
-
     private val log = KotlinLogging.logger { }
 
     val latch = CountDownLatch(1) // Concurrent mechanism for main thread to wait on
@@ -28,15 +27,16 @@ object Valkey {
 
     var initialCheckPassed = false
 
-    fun isReady(): Boolean {
-        return if (initialCheckPassed) {
+    fun isReady(): Boolean =
+        if (initialCheckPassed) {
             true
         } else {
             try {
                 var response: Long
-                val queryTime = measureTimeMillis {
-                    commands.get("dummy")
-                }
+                val queryTime =
+                    measureTimeMillis {
+                        commands.get("dummy")
+                    }
                 log.info { "Initial check query time $queryTime ms" }
                 if (queryTime < 100) {
                     latch.countDown()
@@ -48,13 +48,14 @@ object Valkey {
                 false
             }
         }
-    }
 
     fun connect(): RedisCommands<String, String> {
-        val redisURI = RedisURI.Builder.redis(env(env_VALKEY_HOST_REPLAY), env(env_VALKEY_PORT_REPLAY).toInt())
-            .withSsl(true)
-            .withAuthentication(env(env_VALKEY_USERNAME_REPLAY), env(env_VALKEY_PASSWORD_REPLAY).toCharArray())
-            .build()
+        val redisURI =
+            RedisURI.Builder
+                .redis(env(env_VALKEY_HOST_REPLAY), env(env_VALKEY_PORT_REPLAY).toInt())
+                .withSsl(true)
+                .withAuthentication(env(env_VALKEY_USERNAME_REPLAY), env(env_VALKEY_PASSWORD_REPLAY).toCharArray())
+                .build()
 
         File("/tmp/uri").writeText(redisURI.toURI().toString())
 

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package no.nav.sf.pubsub.pubsub
 
 import com.google.gson.Gson
@@ -47,7 +49,12 @@ val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
     val jsonObject = it.asJsonObject()
     val onlyOneId = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").size() == 1
     if (!onlyOneId) throw RuntimeException("Not expecting more then one recordId on event")
-    val id = jsonObject.getAsJsonObject("ChangeEventHeader").getAsJsonArray("recordIds").first().asString
+    val id =
+        jsonObject
+            .getAsJsonObject("ChangeEventHeader")
+            .getAsJsonArray("recordIds")
+            .first()
+            .asString
     val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
     try {
         Kafka.kafkaProducer.send(kafkaRecord).get()
@@ -96,10 +103,11 @@ fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Bo
                     log.error(SECURE, logMessage)
                 }
             }
-            val metricLabelValues = eventType.fieldsToUseAsMetricLabels.map { key ->
-                val value = obj[key]
-                if (value.isJsonNull) "" else value.asString
-            }
+            val metricLabelValues =
+                eventType.fieldsToUseAsMetricLabels.map { key ->
+                    val value = obj[key]
+                    if (value.isJsonNull) "" else value.asString
+                }
             Metrics.logCounter!!.labels(*metricLabelValues.toTypedArray()).inc()
             true
         } catch (e: Throwable) {

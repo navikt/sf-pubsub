@@ -210,4 +210,3 @@
 **Hvorfor valgt:** Offisiell plugin, godt støttet, og strømlinjeformer bygging av applikasjoner med Protobuf/gRPC.
 
 </details>
-

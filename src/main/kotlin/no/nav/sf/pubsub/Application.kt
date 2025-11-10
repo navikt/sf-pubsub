@@ -19,8 +19,9 @@ import org.http4k.server.asServer
 
 val useValkey = !isLocal
 
-class Application(val recordHandler: (GenericRecord) -> Boolean) {
-
+class Application(
+    val recordHandler: (GenericRecord) -> Boolean,
+) {
     val log = KotlinLogging.logger { }
 
     private val salesforceTopic = env(config_SALESFORCE_TOPIC) // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
@@ -29,36 +30,39 @@ class Application(val recordHandler: (GenericRecord) -> Boolean) {
 
     fun apiServer(port: Int): Http4kServer = api().asServer(Netty(port))
 
-    fun api(): HttpHandler = routes(
-        "/internal/isAlive" bind Method.GET to isAliveHandler,
-        "/internal/isReady" bind Method.GET to isReadyHandler,
-        "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
-        "/internal/gui" bind Method.GET to Gui.guiHandler,
-    )
+    fun api(): HttpHandler =
+        routes(
+            "/internal/isAlive" bind Method.GET to isAliveHandler,
+            "/internal/isReady" bind Method.GET to isReadyHandler,
+            "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
+            "/internal/gui" bind Method.GET to Gui.guiHandler,
+        )
 
     fun start() {
         apiServer(8080).start()
 
-        val replayPreset = if (useValkey) {
-            Valkey.latch.await() // Wait for valkey initialization to be done, and possibly replayId fetched from store
-            if (Valkey.lastReplayId == null) {
-                log.info { "Valkey in use, no replay ID found, will read LATEST" }
-                ReplayPreset.LATEST
+        val replayPreset =
+            if (useValkey) {
+                Valkey.latch.await() // Wait for valkey initialization to be done, and possibly replayId fetched from store
+                if (Valkey.lastReplayId == null) {
+                    log.info { "Valkey in use, no replay ID found, will read LATEST" }
+                    ReplayPreset.LATEST
+                } else {
+                    log.info { "Valkey in use, replay ID found, will read from (not including) replay ID" }
+                    ReplayPreset.CUSTOM
+                }
             } else {
-                log.info { "Valkey in use, replay ID found, will read from (not including) replay ID" }
-                ReplayPreset.CUSTOM
+                log.info { "No Valkey in use, will read EARLIEST" }
+                ReplayPreset.EARLIEST
             }
-        } else {
-            log.info { "No Valkey in use, will read EARLIEST" }
-            ReplayPreset.EARLIEST
-        }
 
-        pubSubClient = PubSubClient(
-            salesforceTopic = salesforceTopic,
-            initialReplayPreset = replayPreset,
-            initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Valkey.lastReplayId else null, // fromEscapedString("\\000\\000\\000\\000\\000\\000\\033\\240\\000\\000"),
-            recordHandler = recordHandler // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
-        )
+        pubSubClient =
+            PubSubClient(
+                salesforceTopic = salesforceTopic,
+                initialReplayPreset = replayPreset,
+                initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Valkey.lastReplayId else null,
+                recordHandler = recordHandler, // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+            )
 
         pubSubClient.start()
 
@@ -66,7 +70,7 @@ class Application(val recordHandler: (GenericRecord) -> Boolean) {
             Thread.sleep(600000) // Every 10th min
             log.info(
                 "Subscription Active. Received a total of " + pubSubClient.receivedEvents.get() +
-                    " events. Processed " + pubSubClient.processedEvents.get()
+                    " events. Processed " + pubSubClient.processedEvents.get(),
             )
         }
     }
