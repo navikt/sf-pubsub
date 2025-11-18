@@ -17,4 +17,4 @@ jobs:
     with:
       DEPLOY_APP: sf-pubsub-employer-activity
       DEPLOY_CLUSTER: dev-gcp
-      DEPLOY_NAMESPACE: teamcrm              # TODO replace with folder structure or file scanning in future to support deploy ALL
+      DEPLOY_NAMESPACE: team-dialog              # TODO replace with folder structure or file scanning in future to support deploy ALL
