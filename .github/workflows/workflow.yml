@@ -17,6 +17,8 @@ jobs:
     name: >- # Displays inputs as name on job
       ${{ inputs.DEPLOY_APP }} - ${{ inputs.DEPLOY_CLUSTER }} - ${{ inputs.DEPLOY_NAMESPACE }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Dump github context
         env:
@@ -26,6 +28,8 @@ jobs:
     name: Run tests
     needs: run-info
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout v5.0.1
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
@@ -102,6 +106,9 @@ jobs:
     name: Deploy ${{ matrix.target.app }} to ${{ inputs.DEPLOY_CLUSTER }} - ${{ inputs.DEPLOY_NAMESPACE}}
     needs: [ build, setup-matrix ]
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     strategy:
       matrix:
         target: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}

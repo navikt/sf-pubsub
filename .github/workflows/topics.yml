@@ -14,9 +14,8 @@ jobs:
     name: Setup Matrix
     runs-on: ubuntu-latest
     steps:
-      # Checkout
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout v5.0.1
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           fetch-depth: 2
 
@@ -62,9 +61,8 @@ jobs:
       matrix:
         target: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
     steps:
-      # checkout code
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout v5.0.1
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       # Set cluster based on environment
       - name: Set Cluster
@@ -81,7 +79,7 @@ jobs:
 
       # deploy to appropriate cluster
       - name: Deploy to Cluster
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@21af204a4d63d1c10d149916d96669d5c2fa6f76 # v2
         env:
           CLUSTER: ${{ steps.set-cluster.outputs.cluster }}
           RESOURCE: .topic/${{ matrix.target.namespace }}/${{ matrix.target.environment }}/${{ matrix.target.topic }}.yaml
