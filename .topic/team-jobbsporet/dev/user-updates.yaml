@@ -1,0 +1,28 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: user-updates
+  namespace: team-jobbsporet
+  labels:
+    team: team-jobbsporet
+  annotations:
+    kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
+spec:
+  pool: nav-dev
+  config:
+    cleanupPolicy: delete
+    minimumInSyncReplicas: 1
+    partitions: 1
+    replication: 3
+    retentionBytes: -1
+    retentionHours: 720 #30 days
+  acl:
+    - team: team-jobbsporet
+      application: sf-pubsub-user-updates
+      access: readwrite
+    - team: teamcrm
+      application: sf-bjorntest
+      access: readwrite
+    - team: team-jobbsporet
+      application: sf-dvh
+      access: read
