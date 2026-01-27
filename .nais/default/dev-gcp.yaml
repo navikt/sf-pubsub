@@ -41,13 +41,6 @@ spec:
           - azp_name
           - NAVident
   accessPolicy:
-    inbound:
-      rules:
-        - application: salesforce
-          namespace: teamcrm
-          cluster: dev-external
-        - application: itestapp
-          namespace: teamcrm
     outbound:
       external:
         - host: test.salesforce.com
