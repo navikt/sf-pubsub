@@ -43,6 +43,8 @@ spec:
   accessPolicy:
     outbound:
       external:
+        - host: api.puzzel.com
+        - host: app.puzzel.com
         - host: test.salesforce.com
         - host: navdialog--sit2.my.salesforce.com
         - host: navdialog--preprod.my.salesforce.com
