@@ -137,7 +137,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
     // Only handle PendingServiceRouting CREATE / UPDATE
     if (entityName != "PendingServiceRouting" ||
-        (changeType != "CREATE" && changeType != "UPDATE")
+        (changeType != "CREATE")
     ) {
         log.debug { "Ignoring event entity=$entityName changeType=$changeType" }
         ignoreCounter.inc()
