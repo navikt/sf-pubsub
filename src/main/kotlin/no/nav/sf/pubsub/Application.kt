@@ -5,6 +5,8 @@ import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
 import no.nav.sf.pubsub.pubsub.Valkey
+import no.nav.sf.pubsub.puzzel.ETask
+import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
@@ -64,6 +66,8 @@ class Application(
                 initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Valkey.lastReplayId else null,
                 recordHandler = recordHandler,
             )
+
+        puzzelClient.send(ETask(to = "dummy", uri = "dummy#dummy#dummy", queueKey = "dummy"))
 
         pubSubClient.start()
 

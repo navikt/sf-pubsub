@@ -50,6 +50,8 @@ class PuzzelClient(
             try {
                 log.info { "Sending eTask to Puzzel (attempt $attempt): $jsonBody" }
                 val response = httpClient(request)
+
+                File("/tmp/latestPuzzleSendResponse").writeText(response.toMessage())
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
 
                 when {
