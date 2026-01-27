@@ -3,7 +3,8 @@ metadata:
   labels:
     team: teamnks
 spec:
-  envFrom: sf-pubsub-sit2
+  envFrom:
+    - secret: sf-pubsub-sit2
   env:
     - name: SALESFORCE_TOPIC
       value: '/data/ChangeEvents'
