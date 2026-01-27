@@ -67,8 +67,6 @@ class Application(
                 recordHandler = recordHandler,
             )
 
-        puzzelClient.send(ETask(to = "dummy", uri = "dummy#dummy#dummy", queueKey = "dummy"))
-
         pubSubClient.start()
 
         while (pubSubClient.isActive.get()) {
