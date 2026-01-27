@@ -7,23 +7,23 @@ class PuzzelMappingCache(
     private val apiClient: ApiClient,
 ) {
     @Volatile
-    var cache: Map<String, PuzzelChatMapping> = emptyMap()
+    private var cache: Map<String, PuzzelChatMapping> = emptyMap()
 
-    fun getByGroupId(groupId: String): PuzzelChatMapping {
+    fun getByQueueId(queueId: String): PuzzelChatMapping {
         // First try cache
-        cache[groupId]?.let { return it }
+        cache[queueId]?.let { return it }
 
         // Not found -> refetch
         refreshCache()
 
         // Try again
-        return cache[groupId] ?: throw NoSuchElementException("No Puzzel mapping found for groupId=$groupId")
+        return cache[queueId] ?: throw NoSuchElementException("No Puzzel mapping found for queueId=$queueId")
     }
 
     @Synchronized
     fun refreshCache() {
         val mappings = apiClient.fetchPuzzelChatMapping()
-        cache = mappings.associateBy { it.salesforceGroupId }
+        cache = mappings.associateBy { it.salesforceQueueId }
     }
 }
 

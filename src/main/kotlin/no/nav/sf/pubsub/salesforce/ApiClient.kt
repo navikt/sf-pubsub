@@ -11,7 +11,6 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import java.io.File
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -23,7 +22,7 @@ class ApiClient {
 
     private val queryFetchPuzzelChatMapping =
         URLEncoder.encode(
-            "SELECT Id, Salesforce_GroupId__c, Puzzel_Chat_Name__c, Puzzel_Queue_Api__c FROM Puzzel_Chat_Mapping__mdt",
+            "SELECT Id, Salesforce_QueueId__c, Puzzel_Chat_Name__c, Puzzel_Queue_Api__c FROM Puzzel_Chat_Mapping__mdt",
             StandardCharsets.UTF_8.toString(),
         )
 
@@ -37,7 +36,7 @@ class ApiClient {
         return records.map { r ->
             PuzzelChatMapping(
                 id = r.asJsonObject.get("Id").asString,
-                salesforceGroupId = r.asJsonObject.get("Salesforce_GroupId__c").asString,
+                salesforceQueueId = r.asJsonObject.get("Salesforce_QueueId__c").asString,
                 chatName = r.asJsonObject.get("Puzzel_Chat_Name__c").asString,
                 queueApi = r.asJsonObject.get("Puzzel_Queue_Api__c").asString,
             )

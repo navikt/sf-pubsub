@@ -168,7 +168,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     }
 
     // Lookup mapping (may refetch internally)
-    val mapping = puzzelMappingCache.getByGroupId(queueId)
+    val mapping = puzzelMappingCache.getByQueueId(queueId)
 
     val eTask =
         ETask(
@@ -179,7 +179,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
     log.info {
         "Created ETask for recordId=$recordId " +
-            "groupId=$queueId queueKey=${eTask.queueKey}"
+            "queueId=$queueId queueKey=${eTask.queueKey}"
     }
 
     puzzelClient.send(eTask)
