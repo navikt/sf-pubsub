@@ -150,7 +150,7 @@ class PubSubClient(
                     val retry = RetryRequestSender(ReplayPreset.EARLIEST)
                     retryScheduler.schedule(retry, 2000L, TimeUnit.MILLISECONDS)
                 } else {
-                    log.error { "Error occurred: ${t.message} ${t.javaClass.name}" }
+                    log.error { "Error occurred: ${t.message} ${t.javaClass.name} ${t.stackTraceToString()}" }
                     log.info("Retries remaining: " + retriesLeft.get())
                     if (retriesLeft.get() == 0) {
                         log.info("Exhausted all retries. Closing subscription.")
