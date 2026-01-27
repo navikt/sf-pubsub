@@ -5,6 +5,10 @@ import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
 import no.nav.sf.pubsub.pubsub.Valkey
+import no.nav.sf.pubsub.puzzel.ETask
+import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+import no.nav.sf.pubsub.salesforce.apiClient
+import no.nav.sf.pubsub.token.PuzzelAccessTokenHandler
 import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -61,7 +65,7 @@ class Application(
                 salesforceTopic = salesforceTopic,
                 initialReplayPreset = replayPreset,
                 initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Valkey.lastReplayId else null,
-                recordHandler = recordHandler, // kafkaRecordHandler("teamcrm.bjorn-message") // silentRecordHandler
+                recordHandler = recordHandler,
             )
 
         pubSubClient.start()

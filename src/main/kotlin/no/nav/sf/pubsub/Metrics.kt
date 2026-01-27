@@ -19,6 +19,8 @@ object Metrics {
     val consumedCounter = registerCounter("consumed")
     val producedCounter = registerCounter("produced")
 
+    val ignoreCounter = registerCounter("ignored")
+
     var logCounter: Counter? = null // placeholder for logEventHandlers
 
     fun registerCounter(name: String) =

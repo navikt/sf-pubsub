@@ -1,0 +1,13 @@
+metadata:
+  namespace: teamnks
+  labels:
+    team: teamnks
+spec:
+  envFrom: sf-pubsub-sit2
+  env:
+    - name: SALESFORCE_TOPIC
+      value: '/data/ChangeEvents'
+    - name: PUZZEL_TOKEN_URL
+      value: 'https://app.puzzel.com/id/connect/token'
+    - name: PUZZEL_API_BASE
+      value: 'https://api.puzzel.com/ContactCentre5'

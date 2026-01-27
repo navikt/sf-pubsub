@@ -100,7 +100,6 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
                     lastTokenTriplet =
                         Triple(accessTokenResponse.access_token, accessTokenResponse.instance_url, accessTokenResponse.id.split("/")[4])
                     expireTime = System.currentTimeMillis() + 600000 // (expireMomentSinceEpochInSeconds - 10) * 1000
-                    // println("UPDATE triple $lastTokenTriplet")
                     return lastTokenTriplet
                 }
             } catch (e: Exception) {

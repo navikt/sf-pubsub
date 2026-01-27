@@ -24,7 +24,6 @@ spec:
   observability:
     logging:
       destinations:
-        - id: elastic
         - id: loki
   resources:
     limits:
@@ -67,3 +66,5 @@ spec:
       value: https://test.salesforce.com/services/oauth2/token
     - name: DEPLOY_APP
       value: '{{ DEPLOY_APP }}'
+    - name: SALESFORCE_VERSION
+      value: 'v65.0'

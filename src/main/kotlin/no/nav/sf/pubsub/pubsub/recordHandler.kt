@@ -9,10 +9,14 @@ import com.google.gson.JsonParser
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.sf.pubsub.Metrics
+import no.nav.sf.pubsub.Metrics.ignoreCounter
 import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.logs.EventTypeSecureLog
 import no.nav.sf.pubsub.logs.SECURE
 import no.nav.sf.pubsub.logs.generateLoggingContextForSecureLogs
+import no.nav.sf.pubsub.puzzel.ETask
+import no.nav.sf.pubsub.puzzel.puzzelClient
+import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -115,6 +119,72 @@ fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Bo
             false
         }
     }
+}
+
+val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@{ record ->
+    File("/tmp/latestRecord").writeText(record.asJsonObject().toString())
+
+    val json = record.asJsonObject()
+
+    val header =
+        json.getAsJsonObject("ChangeEventHeader") ?: run {
+            log.debug { "No ChangeEventHeader – ignoring record" }
+            return@puzzelPSRRecordHandler false
+        }
+
+    val entityName = header.get("entityName")?.asString
+    val changeType = header.get("changeType")?.asString
+
+    // Only handle PendingServiceRouting CREATE / UPDATE
+    if (entityName != "PendingServiceRouting" ||
+        (changeType != "CREATE" && changeType != "UPDATE")
+    ) {
+        log.debug { "Ignoring event entity=$entityName changeType=$changeType" }
+        ignoreCounter.inc()
+        return@puzzelPSRRecordHandler true
+    }
+
+    val recordId =
+        header
+            .getAsJsonArray("recordIds")
+            ?.firstOrNull()
+            ?.asString
+            ?: throw IllegalStateException("Missing recordId in ChangeEventHeader")
+
+    val workItemId =
+        json.get("WorkItemId")?.asString
+            ?: throw IllegalStateException("Missing WorkItemId for recordId=$recordId")
+
+    val serviceChannelId =
+        json.get("ServiceChannelId")?.asString
+            ?: throw IllegalStateException("Missing ServiceChannelId for recordId=$recordId")
+
+    val queueId = json.get("QueueId")?.asString
+
+    if (queueId == null) {
+        log.warn("QueueId (GroupId) is null for recordId=$recordId, will ignore event")
+        ignoreCounter.inc()
+        return@puzzelPSRRecordHandler true // Continue processing
+    }
+
+    // Lookup mapping (may refetch internally)
+    val mapping = puzzelMappingCache.getByGroupId(queueId)
+
+    val eTask =
+        ETask(
+            to = mapping.chatName,
+            queueKey = mapping.queueApi,
+            uri = "$recordId#$workItemId#$serviceChannelId",
+        )
+
+    log.info {
+        "Created ETask for recordId=$recordId " +
+            "groupId=$queueId queueKey=${eTask.queueKey}"
+    }
+
+    puzzelClient.send(eTask)
+
+    true
 }
 
 fun GenericRecord.asJsonObject() = JsonParser.parseString(this.toString()) as JsonObject

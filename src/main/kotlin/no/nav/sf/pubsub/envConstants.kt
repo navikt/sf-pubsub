@@ -22,6 +22,8 @@ const val config_SF_TOKENHOST = "SF_TOKENHOST"
 const val config_WHITELIST_FILE = "WHITELIST_FILE"
 const val config_SALESFORCE_TOPIC = "SALESFORCE_TOPIC"
 
+const val config_SALESFORCE_VERSION = "SALESFORCE_VERSION"
+
 const val secret_SF_CLIENT_ID = "SF_CLIENT_ID"
 const val secret_SF_USERNAME = "SF_USERNAME"
 
