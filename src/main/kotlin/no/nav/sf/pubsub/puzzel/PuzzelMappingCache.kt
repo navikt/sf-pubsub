@@ -2,6 +2,7 @@ package no.nav.sf.pubsub.puzzel
 
 import no.nav.sf.pubsub.salesforce.ApiClient
 import no.nav.sf.pubsub.salesforce.apiClient
+import java.io.File
 
 class PuzzelMappingCache(
     private val apiClient: ApiClient,
@@ -23,6 +24,7 @@ class PuzzelMappingCache(
     @Synchronized
     fun refreshCache() {
         val mappings = apiClient.fetchPuzzelChatMapping()
+        File("/tmp/puzzleMapCache").writeText(mappings.toString())
         cache = mappings.associateBy { it.salesforceQueueId }
     }
 }

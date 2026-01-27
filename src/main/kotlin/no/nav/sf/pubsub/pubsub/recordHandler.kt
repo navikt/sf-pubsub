@@ -162,7 +162,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     val queueId = json.get("QueueId")?.asString
 
     if (queueId == null) {
-        log.warn("QueueId (GroupId) is null for recordId=$recordId, will ignore event")
+        log.warn("QueueId is null for recordId=$recordId, will ignore event")
         ignoreCounter.inc()
         return@puzzelPSRRecordHandler true // Continue processing
     }

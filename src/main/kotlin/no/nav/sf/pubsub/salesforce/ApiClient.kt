@@ -2,6 +2,7 @@ package no.nav.sf.pubsub.salesforce
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import mu.KotlinLogging
 import no.nav.sf.pubsub.config_SALESFORCE_VERSION
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.puzzel.PuzzelChatMapping
@@ -11,10 +12,12 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
+import java.io.File
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class ApiClient {
+    private val log = KotlinLogging.logger { }
     val accessTokenHandler = DefaultAccessTokenHandler()
     private val client: HttpHandler = OkHttp()
     private val gson = Gson()
@@ -29,17 +32,22 @@ class ApiClient {
     fun fetchPuzzelChatMapping(): List<PuzzelChatMapping> {
         val response = doSFQuery("${accessTokenHandler.instanceUrl}$sfQueryBase$queryFetchPuzzelChatMapping")
         val body = response.bodyString()
+        try {
+            val json = gson.fromJson(body, JsonObject::class.java)
+            val records = json.getAsJsonArray("records")
 
-        val json = gson.fromJson(body, JsonObject::class.java)
-        val records = json.getAsJsonArray("records")
-
-        return records.map { r ->
-            PuzzelChatMapping(
-                id = r.asJsonObject.get("Id").asString,
-                salesforceQueueId = r.asJsonObject.get("Salesforce_QueueId__c").asString,
-                chatName = r.asJsonObject.get("Puzzel_Chat_Name__c").asString,
-                queueApi = r.asJsonObject.get("Puzzel_Queue_Api__c").asString,
-            )
+            return records.map { r ->
+                PuzzelChatMapping(
+                    id = r.asJsonObject.get("Id").asString,
+                    salesforceQueueId = r.asJsonObject.get("Salesforce_QueueId__c").asString,
+                    chatName = r.asJsonObject.get("Puzzel_Chat_Name__c").asString,
+                    queueApi = r.asJsonObject.get("Puzzel_Queue_Api__c").asString,
+                )
+            }
+        } catch (e: Exception) {
+            log.error("Error parsing response from SF: $body")
+            File("/tmp/sfResponseFetchPuzzelChatMapping").appendText("$body\n\n")
+            throw e
         }
     }
 

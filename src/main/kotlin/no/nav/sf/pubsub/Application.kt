@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
 import no.nav.sf.pubsub.pubsub.Valkey
+import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method

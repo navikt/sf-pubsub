@@ -6,6 +6,7 @@ import no.nav.sf.pubsub.pubsub.localRecordHandler
 import no.nav.sf.pubsub.pubsub.puzzelPSRRecordHandler
 import no.nav.sf.pubsub.pubsub.randomUUIDKafkaRecordHandler
 import no.nav.sf.pubsub.pubsub.secureLogRecordHandler
+import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 
 val application: Application =
     if (isLocal) {
@@ -16,7 +17,10 @@ val application: Application =
             "sf-pubsub-employer-activity" -> Application(randomUUIDKafkaRecordHandler)
             "sf-pubsub-application-event" -> Application(secureLogRecordHandler(EventTypeSecureLog.ApplicationEvent))
             "sf-pubsub-concur" -> Application(appendToPodFileHandler)
-            "sf-pubsub-etask" -> Application(puzzelPSRRecordHandler)
+            "sf-pubsub-etask" -> {
+                puzzelMappingCache.refreshCache()
+                Application(puzzelPSRRecordHandler)
+            }
             else -> throw RuntimeException("Attempted to deploy unknown app, make sure it is declared in Bootstrap.kt")
             // changeDataCaptureKafkaRecordHandler <- example of CDC handler
         }
