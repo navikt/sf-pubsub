@@ -6,7 +6,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: app.puzzel.com
+        - host: api.puzzel.com
   envFrom:
     - secret: sf-pubsub-sit2
   env:
