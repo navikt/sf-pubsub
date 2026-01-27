@@ -45,7 +45,7 @@ class ApiClient {
                 )
             }
         } catch (e: Exception) {
-            log.error("Error parsing response from SF: $body")
+            log.error("Fail on mapping fetch:\n ${response.toMessage()}")
             File("/tmp/sfResponseFetchPuzzelChatMapping").appendText("$body\n\n")
             throw e
         }
