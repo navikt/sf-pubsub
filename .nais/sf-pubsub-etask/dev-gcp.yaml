@@ -3,11 +3,6 @@ metadata:
   labels:
     team: teamnks
 spec:
-  accessPolicy:
-    outbound:
-      external:
-        - host: api.puzzel.com
-        - host: app.puzzel.com
   envFrom:
     - secret: sf-pubsub-sit2
   env:
