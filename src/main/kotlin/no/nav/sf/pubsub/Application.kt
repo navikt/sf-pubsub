@@ -67,6 +67,10 @@ class Application(
                 recordHandler = recordHandler,
             )
 
+//        val tryEtask : ETask = ETask(to = "SF_Chat_Familie", uri = "0JRds000006olDBGAY#570ds0000041NZlAAM#0N92o000000LBi6CAG", queueKey = "q_chat_familie")
+//        val queues = puzzelClient.getQueues()
+//        println(queues.first {it.key == tryEtask.queueKey}.toString())
+        // puzzelClient.send(tryEtask)
         pubSubClient.start()
 
         while (pubSubClient.isActive.get()) {
