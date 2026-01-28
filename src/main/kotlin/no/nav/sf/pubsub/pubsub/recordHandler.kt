@@ -174,7 +174,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         ETask(
             to = mapping.chatName,
             queueKey = mapping.queueApi,
-            uri = "$recordId$#$$workItemId$#$$serviceChannelId",
+            uri = "$recordId$#$$serviceChannelId$#$$workItemId",
         )
 
     log.info {
