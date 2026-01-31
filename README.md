@@ -1,6 +1,6 @@
 # sf-pubsub
 
-Integrasjonsapp for å speile data fra Salesforce Platform Events og Change Data Capture Events til systemer som Kafka, Prometheus, Kibana osv.  via Pub/Sub API.
+Integrasjonsapp for å speile data fra Salesforce Platform Events og Change Data Capture Events til systemer som Kafka, Prometheus, Kibana osv. via Pub/Sub API.
 
 Eksempel på oppsett for å lytte til Salesforce Topic og publisere på Aiven Kafka:
 
