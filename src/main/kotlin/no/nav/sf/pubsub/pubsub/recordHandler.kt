@@ -87,6 +87,7 @@ val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
 
 val appendToPodFileHandler: (GenericRecord) -> Boolean = {
     val jsonObject = it.asJsonObject()
+    log.info { "Event receieved: $jsonObject" }
     File("/tmp/events").appendText(gson.toJson(jsonObject) + "\n\n")
     true
 }
