@@ -15,6 +15,7 @@ val application: Application =
     } else {
         when (env(config_DEPLOY_APP)) {
             "sf-pubsub-employer-activity" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-user-updates" -> Application(randomUUIDKafkaRecordHandler)
             "sf-pubsub-application-event" -> Application(secureLogRecordHandler(EventTypeSecureLog.ApplicationEvent))
             "sf-pubsub-concur" -> Application(appendToPodFileHandler)
             "sf-pubsub-etask" -> {
