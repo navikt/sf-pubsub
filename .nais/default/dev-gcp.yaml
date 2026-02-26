@@ -65,3 +65,5 @@ spec:
       value: '{{ DEPLOY_APP }}'
     - name: SALESFORCE_VERSION
       value: 'v65.0'
+    - name: CONTEXT
+      value: 'DEV'

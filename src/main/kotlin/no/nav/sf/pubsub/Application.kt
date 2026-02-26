@@ -27,6 +27,8 @@ class Application(
 ) {
     val log = KotlinLogging.logger { }
 
+    private val devContext = env(config_CONTEXT).uppercase() == "DEV"
+
     private val salesforceTopic = env(config_SALESFORCE_TOPIC) // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
 
     private lateinit var pubSubClient: PubSubClient
@@ -76,7 +78,14 @@ class Application(
         while (pubSubClient.isActive.get()) {
             Thread.sleep(600000) // Every 10th min
             log.info(
-                "Subscription Active. Received a total of " + pubSubClient.receivedEvents.get() +
+                "Subscription Active " + (
+                    if (devContext) {
+                        "(DEV)"
+                    } else {
+                        ""
+                    }
+                ) + ". Received a total of " +
+                    pubSubClient.receivedEvents.get() +
                     " events. Processed " + pubSubClient.processedEvents.get(),
             )
         }

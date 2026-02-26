@@ -21,6 +21,7 @@ const val config_DEPLOY_APP = "DEPLOY_APP"
 const val config_SF_TOKENHOST = "SF_TOKENHOST"
 const val config_WHITELIST_FILE = "WHITELIST_FILE"
 const val config_SALESFORCE_TOPIC = "SALESFORCE_TOPIC"
+const val config_CONTEXT = "CONTEXT"
 
 const val config_SALESFORCE_VERSION = "SALESFORCE_VERSION"
 

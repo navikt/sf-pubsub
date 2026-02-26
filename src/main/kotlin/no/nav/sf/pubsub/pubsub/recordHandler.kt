@@ -180,7 +180,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
     log.info {
         "Created ETask for recordId=$recordId " +
-            "queueId=$queueId queueKey=${eTask.queueKey}"
+            "queueId=$queueId queueKey=${eTask.queueKey}, will send: "
     }
 
     puzzelClient.send(eTask)
