@@ -10,6 +10,7 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.sf.pubsub.Metrics
 import no.nav.sf.pubsub.Metrics.ignoreCounter
+import no.nav.sf.pubsub.application
 import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.logs.EventTypeSecureLog
 import no.nav.sf.pubsub.logs.SECURE
@@ -178,12 +179,16 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
             uri = "$recordId$#$$serviceChannelId$#$$workItemId",
         )
 
+    val willSend = application.devContext
+
     log.info {
         "Created ETask for recordId=$recordId " +
-            "queueId=$queueId queueKey=${eTask.queueKey}, will send: "
+            "queueId=$queueId queueKey=${eTask.queueKey}, will send: $willSend"
     }
 
-    puzzelClient.send(eTask)
+    if (willSend) {
+        puzzelClient.send(eTask)
+    }
 
     true
 }

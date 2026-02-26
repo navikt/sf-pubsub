@@ -27,7 +27,7 @@ class Application(
 ) {
     val log = KotlinLogging.logger { }
 
-    private val devContext = env(config_CONTEXT).uppercase() == "DEV"
+    val devContext = env(config_CONTEXT).uppercase() == "DEV"
 
     private val salesforceTopic = env(config_SALESFORCE_TOPIC) // "/data/EventShadow__ChangeEvent" //"/event/BjornMessage__e"
 
