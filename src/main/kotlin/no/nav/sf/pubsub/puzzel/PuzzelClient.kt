@@ -4,9 +4,11 @@ import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import no.nav.sf.pubsub.config_PUZZEL_API_BASE
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.token.AccessTokenHandler
 import no.nav.sf.pubsub.token.PuzzelAccessTokenHandler
+import no.nav.sf.pubsub.token.PuzzelAccessTokenHandlerHjelpeMiddel
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -14,7 +16,7 @@ import org.http4k.core.Request
 import java.io.File
 
 class PuzzelClient(
-    private val apiBaseUrl: String = env("PUZZEL_API_BASE"),
+    private val apiBaseUrl: String = env(config_PUZZEL_API_BASE),
     private val accessTokenHandler: AccessTokenHandler = PuzzelAccessTokenHandler(),
 ) {
     private val log = KotlinLogging.logger { }
@@ -32,7 +34,7 @@ class PuzzelClient(
      * Sends an eTask to Puzzel.
      * Retries only on network errors or safe server errors (e.g., 429, 503).
      */
-    fun send(task: ETask) { // - /{customerKey}/etasks //assuming  "urn:puzzel:cc:slid", or first part of client id is customerKey 4115509
+    fun send(task: ETask) {
         val url = "$apiBaseUrl/$customerKey/etasks"
         val eTaskRequest = ETaskRequest(task)
         val jsonBody = gson.toJson(eTaskRequest)
@@ -135,3 +137,5 @@ class PuzzelClient(
 }
 
 val puzzelClient: PuzzelClient by lazy { PuzzelClient() }
+
+val puzzelClientHjelpeMiddel: PuzzelClient by lazy { PuzzelClient(accessTokenHandler = PuzzelAccessTokenHandlerHjelpeMiddel()) }

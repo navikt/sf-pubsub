@@ -8,8 +8,11 @@ import mu.KotlinLogging
 import no.nav.sf.pubsub.config_PUZZEL_TOKEN_URL
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.secret_PUZZEL_CLIENT_ID
+import no.nav.sf.pubsub.secret_PUZZEL_CLIENT_ID_HJELPEMIDDEL
 import no.nav.sf.pubsub.secret_PUZZEL_CLIENT_SECRET
+import no.nav.sf.pubsub.secret_PUZZEL_CLIENT_SECRET_HJELPEMIDDEL
 import no.nav.sf.pubsub.secret_PUZZEL_SCOPE
+import no.nav.sf.pubsub.secret_PUZZEL_SCOPE_HJELPEMIDDEL
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -21,14 +24,14 @@ import java.util.Base64
  * OAuth2 client credentials flow for Puzzel
  * Fetches and caches access token
  */
-class PuzzelAccessTokenHandler : AccessTokenHandler {
+class PuzzelAccessTokenHandlerHjelpeMiddel : AccessTokenHandler {
     override val instanceUrl: String = "N/A"
 
     private val log = KotlinLogging.logger { }
 
-    private val clientId = env(secret_PUZZEL_CLIENT_ID)
-    private val clientSecret = env(secret_PUZZEL_CLIENT_SECRET)
-    private val scope = env(secret_PUZZEL_SCOPE)
+    private val clientId = env(secret_PUZZEL_CLIENT_ID_HJELPEMIDDEL)
+    private val clientSecret = env(secret_PUZZEL_CLIENT_SECRET_HJELPEMIDDEL)
+    private val scope = env(secret_PUZZEL_SCOPE_HJELPEMIDDEL)
     private val tokenUrl = env(config_PUZZEL_TOKEN_URL)
 
     private val httpClient: HttpHandler = OkHttp()
