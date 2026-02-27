@@ -17,6 +17,7 @@ import no.nav.sf.pubsub.logs.SECURE
 import no.nav.sf.pubsub.logs.generateLoggingContextForSecureLogs
 import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
+import no.nav.sf.pubsub.puzzel.puzzelClientHjelpeMiddel
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
@@ -179,15 +180,21 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
             uri = "$recordId$#$$serviceChannelId$#$$workItemId",
         )
 
+    val destinedForHjelpemidlerCentralen = (mapping.queueApi == "q_chat_hjelpemidler") && !application.devContext
+
     val willSend = application.devContext
 
     log.info {
         "Created ETask for recordId=$recordId " +
-            "queueId=$queueId queueKey=${eTask.queueKey}, will send: $willSend"
+            "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $destinedForHjelpemidlerCentralen, will send: $willSend"
     }
 
     if (willSend) {
-        puzzelClient.send(eTask)
+        if (destinedForHjelpemidlerCentralen) {
+            puzzelClientHjelpeMiddel.send(eTask)
+        } else {
+            puzzelClient.send(eTask)
+        }
     }
 
     true
