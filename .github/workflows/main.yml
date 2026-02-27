@@ -16,5 +16,5 @@ jobs:
     secrets: inherit
     with:
       DEPLOY_APP: sf-pubsub-etask
-      DEPLOY_CLUSTER: prod-gcp
+      DEPLOY_CLUSTER: dev-gcp
       DEPLOY_NAMESPACE: teamnks             # TODO replace with folder structure or file scanning in future to support deploy ALL
