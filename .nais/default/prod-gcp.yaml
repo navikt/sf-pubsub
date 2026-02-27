@@ -49,6 +49,7 @@ spec:
     outbound:
       external:
         - host: login.salesforce.com
+        - host: navdialog.my.salesforce.com
         - host: api.pubsub.salesforce.com
           ports:
             - port: 7443
