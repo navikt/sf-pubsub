@@ -21,6 +21,7 @@ const val config_DEPLOY_APP = "DEPLOY_APP"
 const val config_SF_TOKENHOST = "SF_TOKENHOST"
 const val config_WHITELIST_FILE = "WHITELIST_FILE"
 const val config_SALESFORCE_TOPIC = "SALESFORCE_TOPIC"
+const val config_CONTEXT = "CONTEXT"
 
 const val config_SALESFORCE_VERSION = "SALESFORCE_VERSION"
 
@@ -38,6 +39,17 @@ const val env_VALKEY_USERNAME_REPLAY = "VALKEY_USERNAME_REPLAY"
 const val env_VALKEY_PASSWORD_REPLAY = "VALKEY_PASSWORD_REPLAY"
 
 const val env_NAIS_APP_NAME = "NAIS_APP_NAME"
+
+// Puzzel specific
+const val config_PUZZEL_TOKEN_URL = "PUZZEL_TOKEN_URL"
+const val config_PUZZEL_API_BASE = "PUZZEL_API_BASE"
+
+const val secret_PUZZEL_CLIENT_ID = "PUZZEL_CLIENT_ID"
+const val secret_PUZZEL_CLIENT_SECRET = "PUZZEL_CLIENT_SECRET"
+const val secret_PUZZEL_SCOPE = "PUZZEL_SCOPE"
+const val secret_PUZZEL_CLIENT_ID_HJELPEMIDDEL = "PUZZEL_CLIENT_ID_HJELPEMIDDEL"
+const val secret_PUZZEL_CLIENT_SECRET_HJELPEMIDDEL = "PUZZEL_CLIENT_SECRET_HJELPEMIDDEL"
+const val secret_PUZZEL_SCOPE_HJELPEMIDDEL = "PUZZEL_SCOPE_HJELPEMIDDEL"
 
 /**
  * Shortcut for fetching environment variables

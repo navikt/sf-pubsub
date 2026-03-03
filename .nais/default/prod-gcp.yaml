@@ -8,8 +8,6 @@ metadata:
 spec:
   image: "{{ image }}"
   port: 8080
-  secureLogs:
-    enabled: true
   replicas:
     min: 1
     max: 1
@@ -51,6 +49,7 @@ spec:
     outbound:
       external:
         - host: login.salesforce.com
+        - host: navdialog.my.salesforce.com
         - host: api.pubsub.salesforce.com
           ports:
             - port: 7443
@@ -68,3 +67,5 @@ spec:
       value: '{{ DEPLOY_APP }}'
     - name: SALESFORCE_VERSION
       value: 'v65.0'
+    - name: CONTEXT
+      value: 'PROD'

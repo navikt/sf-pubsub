@@ -30,7 +30,9 @@ class ApiClient {
         )
 
     fun fetchPuzzelChatMapping(): List<PuzzelChatMapping> {
-        val response = doSFQuery("${accessTokenHandler.instanceUrl}$sfQueryBase$queryFetchPuzzelChatMapping")
+        log.info("Fetching Puzzel Chat Mapping: ${accessTokenHandler.instanceUrl}$sfQueryBase$queryFetchPuzzelChatMapping")
+        var response = doSFQuery("${accessTokenHandler.instanceUrl}$sfQueryBase$queryFetchPuzzelChatMapping")
+        if (!response.status.successful) response = doSFQuery("${accessTokenHandler.instanceUrl}$sfQueryBase$queryFetchPuzzelChatMapping")
         val body = response.bodyString()
         try {
             val json = gson.fromJson(body, JsonObject::class.java)
