@@ -23,6 +23,6 @@ spec:
     - team: team-jobbsporet
       application: sf-dvh
       access: read
-    - team: teamoppfolging-kafka
-      application: sf-dvh
+    - team: teamoppfolging
+      application: teamoppfolging-kafka
       access: read
