@@ -1,0 +1,19 @@
+{
+  "CreatedById": "ALL",
+  "CreatedDate": "DATE_FROM_MILLIS",
+  "EventUuid": "ALL",
+  "isUserActive": "ALL",
+  "ReplayId": "ALL",
+  "RoleId__c": "ALL",
+  "RoleLastModifiedDate__c": "DATE_FROM_MILLIS",
+  "RoleName__c": "ALL",
+  "UserDepartmentName": "ALL",
+  "UserDepartmentNumber__c": "ALL",
+  "UserId__c": "ALL",
+  "UserIsExternal__c": "ALL",
+  "UserProfileName__c": "ALL",
+  "UserRole__c": "ALL",
+  "UserRoleName__c": "ALL",
+  "UserService__c": "ALL",
+  "UserStatus__c": "ALL"
+}
