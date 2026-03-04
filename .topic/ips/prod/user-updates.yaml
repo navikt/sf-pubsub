@@ -1,14 +1,14 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: worktrail-updates
-  namespace: team-jobbsporet
+  name: user-updates
+  namespace: ips
   labels:
-    team: team-jobbsporet
+    team: ips
   annotations:
     kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
 spec:
-  pool: nav-dev
+  pool: nav-prod
   config:
     cleanupPolicy: delete
     minimumInSyncReplicas: 1
@@ -17,15 +17,9 @@ spec:
     retentionBytes: -1
     retentionHours: 720 #30 days
   acl:
-    - team: team-jobbsporet
-      application: sf-pubsub-worktrail-updates
+    - team: ips
+      application: sf-pubsub-user-updates
       access: readwrite
-    - team: teamcrm
-      application: sf-bjorntest
-      access: readwrite
-    - team: team-jobbsporet
-      application: sf-dvh
-      access: read
     - team: teamoppfolging
       application: teamoppfolging-kafka
       access: read

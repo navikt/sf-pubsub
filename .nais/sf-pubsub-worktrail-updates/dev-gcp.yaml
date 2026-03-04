@@ -1,12 +1,12 @@
 metadata:
-  namespace: team-jobbsporet
+  namespace: ips
   labels:
-    team: team-jobbsporet
+    team: ips
 spec:
   env:
     - name: WHITELIST_FILE
       value: "/whitelist/worktrail-updates/dev.json"
     - name: KAFKA_TOPIC
-      value: "team-jobbsporet.worktrail-updates"
+      value: "ips.worktrail-updates"
     - name: SALESFORCE_TOPIC
       value: "/event/IPSJobbsporEvent__e"
