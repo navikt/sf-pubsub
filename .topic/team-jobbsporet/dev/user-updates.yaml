@@ -20,12 +20,9 @@ spec:
     - team: team-jobbsporet
       application: sf-pubsub-user-updates
       access: readwrite
-    - team: teamcrm
-      application: sf-bjorntest
+    - team: team-ips
+      application: sf-pubsub-user-updates
       access: readwrite
-    - team: team-jobbsporet
-      application: sf-dvh
-      access: read
     - team: teamoppfolging
       application: teamoppfolging-kafka
       access: read
