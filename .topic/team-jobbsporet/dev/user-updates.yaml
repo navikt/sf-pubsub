@@ -17,9 +17,6 @@ spec:
     retentionBytes: -1
     retentionHours: 720 #30 days
   acl:
-    - team: team-jobbsporet
-      application: sf-pubsub-user-updates
-      access: readwrite
     - team: team-ips
       application: sf-pubsub-user-updates
       access: readwrite
