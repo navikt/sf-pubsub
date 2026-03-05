@@ -180,21 +180,17 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
             uri = "$recordId$#$$serviceChannelId$#$$workItemId",
         )
 
-    val destinedForHjelpemidlerCentralen = (mapping.queueApi == "q_chat_hjelpemidler") && !application.devContext
-
-    val willSend = application.devContext
+    val useClientForHjelpemidlerCentralen = (mapping.queueApi == "q_chat_hjelpemidler") && !application.devContext
 
     log.info {
         "Created ETask for recordId=$recordId " +
-            "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $destinedForHjelpemidlerCentralen, will send: $willSend"
+            "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $useClientForHjelpemidlerCentralen"
     }
 
-    if (willSend) {
-        if (destinedForHjelpemidlerCentralen) {
-            puzzelClientHjelpeMiddel.send(eTask)
-        } else {
-            puzzelClient.send(eTask)
-        }
+    if (useClientForHjelpemidlerCentralen) {
+        puzzelClientHjelpeMiddel.send(eTask)
+    } else {
+        puzzelClient.send(eTask)
     }
 
     true
