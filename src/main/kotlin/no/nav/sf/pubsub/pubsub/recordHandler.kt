@@ -47,7 +47,6 @@ val localRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val silentRecordHandler: (GenericRecord) -> Boolean = {
-    log.info("Normally silent handler has received event")
     true
 }
 
@@ -117,6 +116,7 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
                 val logMessage = obj[eventType.messageField]?.asString ?: "N/A"
                 withLoggingContext(loggingContext) {
                     log.info("teamLogsRecordHandler will team log error a record")
+                    log.info(TEAM_LOGS, "TEAM_LOGS smoke test from sf-pubsub-application-event")
                     log.error(TEAM_LOGS, logMessage)
                 }
             }
