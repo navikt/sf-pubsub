@@ -95,6 +95,8 @@ val appendToPodFileHandler: (GenericRecord) -> Boolean = {
 }
 
 fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boolean {
+    log.info("Received event to consider team log")
+    log.info(TEAM_LOGS, "Receieved event in team logs handler")
     Metrics.logCounter = Metrics.registerLabelCounter("log", *eventType.fieldsToUseAsMetricLabels.toTypedArray())
     return {
         try {
