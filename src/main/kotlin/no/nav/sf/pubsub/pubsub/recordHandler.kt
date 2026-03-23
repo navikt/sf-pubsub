@@ -101,22 +101,12 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
             val obj = it.asJsonObject()
             val loggingContext = eventType.generateLoggingContextForTeamLogs(obj)
 
-            val levelValue =
-                eventType.fieldForLogLevelFilter
-                    ?.let { key -> obj[key] }
-                    ?.takeIf { !it.isJsonNull }
-                    ?.asString
-
-            log.info("teamLogsRecordHandler invoked, levelValue=$levelValue")
-
             if (eventType.fieldForLogLevelFilter == null ||
                 obj[eventType.fieldForLogLevelFilter].asString == "Error" ||
                 obj[eventType.fieldForLogLevelFilter].asString == "Critical"
             ) {
                 val logMessage = obj[eventType.messageField]?.asString ?: "N/A"
                 withLoggingContext(loggingContext) {
-                    log.info("teamLogsRecordHandler will team log error a record")
-                    log.info(TEAM_LOGS, "TEAM_LOGS smoke test from sf-pubsub-application-event")
                     log.error(TEAM_LOGS, logMessage)
                 }
             }
