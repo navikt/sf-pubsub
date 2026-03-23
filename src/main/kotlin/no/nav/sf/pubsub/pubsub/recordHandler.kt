@@ -102,10 +102,11 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
             val obj = it.asJsonObject()
             val loggingContext = eventType.generateLoggingContextForTeamLogs(obj)
 
-            val levelValue = eventType.fieldForLogLevelFilter
-                ?.let { key -> obj[key] }
-                ?.takeIf { !it.isJsonNull }
-                ?.asString
+            val levelValue =
+                eventType.fieldForLogLevelFilter
+                    ?.let { key -> obj[key] }
+                    ?.takeIf { !it.isJsonNull }
+                    ?.asString
 
             log.info ( "teamLogsRecordHandler invoked, levelValue=$levelValue" )
 
