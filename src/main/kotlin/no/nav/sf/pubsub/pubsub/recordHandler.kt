@@ -107,7 +107,7 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
                 ?.takeIf { !it.isJsonNull }
                 ?.asString
 
-            log.info { "teamLogsRecordHandler invoked, levelValue=$levelValue" }
+            log.info ( "teamLogsRecordHandler invoked, levelValue=$levelValue" )
 
             if (eventType.fieldForLogLevelFilter == null ||
                 obj[eventType.fieldForLogLevelFilter].asString == "Error" ||
@@ -115,6 +115,7 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
             ) {
                 val logMessage = obj[eventType.messageField]?.asString ?: "N/A"
                 withLoggingContext(loggingContext) {
+                    log.info ( "teamLogsRecordHandler will team log error a record" )
                     log.error(TEAM_LOGS, logMessage)
                 }
             }
