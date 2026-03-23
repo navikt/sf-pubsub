@@ -40,6 +40,9 @@ spec:
           - NAVident
   accessPolicy:
     outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
       external:
         - host: api.puzzel.com
         - host: app.puzzel.com
