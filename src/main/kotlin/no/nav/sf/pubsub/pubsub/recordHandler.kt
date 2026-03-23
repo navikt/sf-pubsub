@@ -47,6 +47,7 @@ val localRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val silentRecordHandler: (GenericRecord) -> Boolean = {
+    log.info("Normally silent handler has received event")
     true
 }
 
