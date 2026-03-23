@@ -8,12 +8,12 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-val SECURE: Marker = MarkerFactory.getMarker("SECURE_LOG")
+val TEAM_LOGS: Marker = MarkerFactory.getMarker("TEAM_LOGS")
 
-enum class EventTypeSecureLog(
+enum class EventTypeTeamLog(
     val messageField: String,
     val fields: List<String>,
-    val fieldForDerivingTimestamp: String?, // If you want to generate a TIMESTAMP_DERIVED field (parsed as date in elastic)
+    val fieldForDerivingTimestamp: String?, // If you want to generate a TIMESTAMP_DERIVED field
     val fieldForLogLevelFilter: String?,
     val fieldsToUseAsMetricLabels: List<String>,
 ) {
@@ -49,7 +49,7 @@ enum class EventTypeSecureLog(
     ),
 }
 
-fun EventTypeSecureLog.generateLoggingContextForSecureLogs(eventData: JsonObject): Map<String, String> =
+fun EventTypeTeamLog.generateLoggingContextForTeamLogs(eventData: JsonObject): Map<String, String> =
     this.fields
         .associateWith { key ->
             val value = eventData[key]

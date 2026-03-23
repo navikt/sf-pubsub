@@ -12,9 +12,9 @@ import no.nav.sf.pubsub.Metrics
 import no.nav.sf.pubsub.Metrics.ignoreCounter
 import no.nav.sf.pubsub.application
 import no.nav.sf.pubsub.kafka.Kafka
-import no.nav.sf.pubsub.logs.EventTypeSecureLog
-import no.nav.sf.pubsub.logs.SECURE
-import no.nav.sf.pubsub.logs.generateLoggingContextForSecureLogs
+import no.nav.sf.pubsub.logs.EventTypeTeamLog
+import no.nav.sf.pubsub.logs.TEAM_LOGS
+import no.nav.sf.pubsub.logs.generateLoggingContextForTeamLogs
 import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelClientHjelpeMiddel
@@ -94,12 +94,12 @@ val appendToPodFileHandler: (GenericRecord) -> Boolean = {
     true
 }
 
-fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Boolean {
+fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boolean {
     Metrics.logCounter = Metrics.registerLabelCounter("log", *eventType.fieldsToUseAsMetricLabels.toTypedArray())
     return {
         try {
             val obj = it.asJsonObject()
-            val loggingContext = eventType.generateLoggingContextForSecureLogs(obj)
+            val loggingContext = eventType.generateLoggingContextForTeamLogs(obj)
 
             if (eventType.fieldForLogLevelFilter == null ||
                 obj[eventType.fieldForLogLevelFilter].asString == "Error" ||
@@ -107,7 +107,7 @@ fun secureLogRecordHandler(eventType: EventTypeSecureLog): (GenericRecord) -> Bo
             ) {
                 val logMessage = obj[eventType.messageField]?.asString ?: "N/A"
                 withLoggingContext(loggingContext) {
-                    log.error(SECURE, logMessage)
+                    log.error(TEAM_LOGS, logMessage)
                 }
             }
             val metricLabelValues =
