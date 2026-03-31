@@ -2,6 +2,8 @@ name: Preconfigured run on push
 
 on:
   push:
+    branches-ignore:
+      - 'chore/**'
     paths-ignore:
       - README.md
       - .topic/**
