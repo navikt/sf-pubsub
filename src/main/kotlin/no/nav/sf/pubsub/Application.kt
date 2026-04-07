@@ -8,6 +8,7 @@ import no.nav.sf.pubsub.pubsub.Valkey
 import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -41,7 +42,13 @@ class Application(
             "/internal/isReady" bind Method.GET to isReadyHandler,
             "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
             "/internal/gui" bind Method.GET to Gui.guiHandler,
+            "/internal/testAccess/old" bind Method.GET to testAccessHandlerOld,
         )
+
+    private val testAccessHandlerOld: HttpHandler = {
+        val defaultAccessTokenHandler = DefaultAccessTokenHandler()
+        Response(OK).body("Test access (old) successful: " + defaultAccessTokenHandler.testAccess())
+    }
 
     fun start() {
         apiServer(8080).start()

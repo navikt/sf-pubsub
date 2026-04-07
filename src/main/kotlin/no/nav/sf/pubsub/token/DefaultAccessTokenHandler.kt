@@ -34,6 +34,8 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
     override val instanceUrl get() = fetchAccessTokenAndInstanceUrl().second
     override val tenantId get() = fetchAccessTokenAndInstanceUrl().third
 
+    fun testAccess(): Boolean = fetchAccessTokenAndInstanceUrl(true).first.isNotBlank()
+
     private val log = KotlinLogging.logger { }
 
     private val sfTokenHost = env(config_SF_TOKENHOST)
@@ -54,8 +56,8 @@ class DefaultAccessTokenHandler : AccessTokenHandler {
 
     private var expireTime = System.currentTimeMillis()
 
-    private fun fetchAccessTokenAndInstanceUrl(): Triple<String, String, String> {
-        if (System.currentTimeMillis() < expireTime) {
+    private fun fetchAccessTokenAndInstanceUrl(ignoreCache: Boolean = false): Triple<String, String, String> {
+        if (!ignoreCache && System.currentTimeMillis() < expireTime) {
             log.debug { "Using cached access token (${(expireTime - System.currentTimeMillis()) / 60000} min left)" }
             return lastTokenTriplet
         }
