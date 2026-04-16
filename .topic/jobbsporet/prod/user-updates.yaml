@@ -2,9 +2,9 @@ apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
   name: user-updates
-  namespace: ips
+  namespace: jobbsporet
   labels:
-    team: ips
+    team: jobbsporet
   annotations:
     kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
 spec:
@@ -17,7 +17,7 @@ spec:
     retentionBytes: -1
     retentionHours: 720 #30 days
   acl:
-    - team: ips
+    - team: jobbsporet
       application: sf-pubsub-user-updates
       access: readwrite
     - team: teamoppfolging
