@@ -57,8 +57,6 @@ spec:
   valkey:
     - instance: replay
       access: readwrite
-  envFrom:
-    - secret: sf-pubsub-preprod
   env:
     - name: SF_TOKENHOST
       value: https://test.salesforce.com/services/oauth2/token

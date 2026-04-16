@@ -205,7 +205,7 @@ class PubSubClient(
             processedEvents.addAndGet(1)
             Metrics.producedCounter.inc()
         } else {
-            log.error { "Failed to consume record - will cancel" }
+            log.error { "Failed to consume record -  will cancel" }
             throw RuntimeException("Failed to consume record - will cancel")
         }
     }

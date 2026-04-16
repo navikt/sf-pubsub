@@ -17,6 +17,6 @@ jobs:
       contents: write
     secrets: inherit
     with:
-      DEPLOY_APP: sf-pubsub-application-event
+      DEPLOY_APP: sf-pubsub-user-updated
       DEPLOY_CLUSTER: dev-gcp
-      DEPLOY_NAMESPACE: platforce             # TODO replace with folder structure or file scanning in future to support deploy ALL
+      DEPLOY_NAMESPACE: jobbsporet # TODO replace with folder structure or file scanning in future to support deploy ALL
