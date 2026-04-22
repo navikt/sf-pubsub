@@ -51,7 +51,7 @@ dependencies {
     implementation 'io.grpc:grpc-auth:1.68.0'
 
     implementation 'io.netty:netty-codec:4.1.125.Final' //Transitive for grpc-netty
-    implementation 'io.netty:netty-codec-http:4.2.10.Final' //Transitive for grpc-netty
+    implementation 'io.netty:netty-codec-http:4.2.11.Final' //Transitive for grpc-netty
 
     implementation 'io.lettuce:lettuce-core:7.0.0.RELEASE'
 
