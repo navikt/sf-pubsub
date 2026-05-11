@@ -33,6 +33,18 @@ const val secret_KEYSTORE_PASSWORD = "KEYSTORE_PASSWORD"
 const val secret_PRIVATE_KEY_ALIAS = "PRIVATE_KEY_ALIAS"
 const val secret_PRIVATE_KEY_PASSWORD = "PRIVATE_KEY_PASSWORD"
 
+// New access secrets/config:
+const val config_SALESFORCE_API_VERSION = "SALESFORCE_API_VERSION"
+const val config_SF_TOKEN_HOST = "SF_TOKEN_HOST"
+
+const val secret_SF_JWT_USERNAME = "SF_JWT_USERNAME" // Part of credential package, not really secret
+const val secret_SF_JWT_CLIENT_ID = "SF_JWT_CLIENT_ID"
+const val secret_SF_JWT_KEYSTORE_B64 = "SF_JWT_KEYSTORE_B64"
+const val secret_SF_JWT_KEYSTORE_PASSWORD = "SF_JWT_KEYSTORE_PASSWORD"
+
+// Fpr migration:
+const val secret_SF_VALIDATION_CLIENT_ID = "SF_VALIDATION_CLIENT_ID"
+
 const val env_VALKEY_HOST_REPLAY = "VALKEY_HOST_REPLAY"
 const val env_VALKEY_PORT_REPLAY = "VALKEY_PORT_REPLAY"
 const val env_VALKEY_USERNAME_REPLAY = "VALKEY_USERNAME_REPLAY"

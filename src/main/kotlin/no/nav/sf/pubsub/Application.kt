@@ -9,6 +9,8 @@ import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
+import no.nav.sf.pubsub.token.MigratingAccessTokenHandler
+import no.nav.sf.pubsub.token.NewAccessTokenHandler
 import org.apache.avro.generic.GenericRecord
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -20,6 +22,8 @@ import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 val useValkey = !isLocal
 
@@ -42,12 +46,35 @@ class Application(
             "/internal/isReady" bind Method.GET to isReadyHandler,
             "/internal/metrics" bind Method.GET to Metrics.metricsHandler,
             "/internal/gui" bind Method.GET to Gui.guiHandler,
+            "/internal/user" bind Method.GET to { Response(OK).body(env(secret_SF_JWT_USERNAME)) },
+            "/internal/version" bind Method.GET to { Response(OK).body(env(config_SALESFORCE_API_VERSION)) },
             "/internal/testAccess/old" bind Method.GET to testAccessHandlerOld,
+            "/internal/testAccess/new" bind Method.GET to testAccessHandlerNew,
+            "/internal/testAccess/validation" bind Method.GET to testAccessHandlerValidation,
+            "/internal/testAccess/migration" bind Method.GET to testAccessHandlerMigration,
         )
 
+    val currentTimeStamp: String get() = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+
     private val testAccessHandlerOld: HttpHandler = {
-        val defaultAccessTokenHandler = DefaultAccessTokenHandler()
-        Response(OK).body("Test access (old) successful: " + defaultAccessTokenHandler.testAccess())
+        val oldAccessTokenHandler = DefaultAccessTokenHandler()
+        Response(OK).body("$currentTimeStamp\nTest access (old) successful: " + oldAccessTokenHandler.testAccess())
+    }
+
+    private val testAccessHandlerNew: HttpHandler = {
+        val newAccessTokenHandler = NewAccessTokenHandler()
+        Response(OK).body("$currentTimeStamp\nTest access (new) successful: " + newAccessTokenHandler.testAccess())
+    }
+
+    private val testAccessHandlerValidation: HttpHandler = {
+        val newAccessTokenHandlerAgainstValidation = NewAccessTokenHandler(sfClientId = env(secret_SF_VALIDATION_CLIENT_ID))
+        Response(OK).body("$currentTimeStamp\nTest access (validation) successful: " + newAccessTokenHandlerAgainstValidation.testAccess())
+    }
+
+    private val testAccessHandlerMigration: HttpHandler = {
+        val migrationTokenHandler =
+            MigratingAccessTokenHandler(old = DefaultAccessTokenHandler(), new = NewAccessTokenHandler())
+        Response(OK).body("$currentTimeStamp\nTest access (migration) result: " + migrationTokenHandler.testAccess())
     }
 
     fun start() {
