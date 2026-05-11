@@ -6,6 +6,8 @@ spec:
   ingresses:
     - "https://sf-pubsub-employer-activity.intern.dev.nav.no"
   envFrom:
+    - configmap: salesforce-common
+    - secret: migration-preprod
     - secret: sf-pubsub-preprod
   env:
     - name: WHITELIST_FILE
