@@ -3,7 +3,11 @@ metadata:
   labels:
     team: teamnks
 spec:
+  ingresses:
+    - "https://sf-pubsub-etask.intern.dev.nav.no"
   envFrom:
+    - configmap: salesforce-common
+    - secret: migration-sit2
     - secret: sf-pubsub-sit2
   env:
     - name: SALESFORCE_TOPIC

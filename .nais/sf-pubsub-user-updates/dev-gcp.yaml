@@ -4,6 +4,7 @@ metadata:
     team: jobbsporet
 spec:
   envFrom:
+    - configmap: salesforce-common
     - secret: sf-pubsub-preprod
   env:
     - name: WHITELIST_FILE
