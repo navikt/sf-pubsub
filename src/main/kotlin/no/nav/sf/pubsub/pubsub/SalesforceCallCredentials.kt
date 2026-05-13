@@ -6,10 +6,13 @@ import io.grpc.Status
 import mu.KotlinLogging
 import no.nav.sf.pubsub.token.AccessTokenHandler
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
+import no.nav.sf.pubsub.token.MigratingAccessTokenHandler
+import no.nav.sf.pubsub.token.NewAccessTokenHandler
 import java.util.concurrent.Executor
 
 class SalesforceCallCredentials(
-    private val accessTokenHandler: AccessTokenHandler = DefaultAccessTokenHandler(),
+    private val accessTokenHandler: AccessTokenHandler =
+        MigratingAccessTokenHandler(old = DefaultAccessTokenHandler(), new = NewAccessTokenHandler()),
 ) : CallCredentials() {
     private val log = KotlinLogging.logger { }
 

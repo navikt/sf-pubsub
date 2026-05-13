@@ -7,6 +7,8 @@ import no.nav.sf.pubsub.config_SALESFORCE_VERSION
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.puzzel.PuzzelChatMapping
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
+import no.nav.sf.pubsub.token.MigratingAccessTokenHandler
+import no.nav.sf.pubsub.token.NewAccessTokenHandler
 import org.http4k.client.OkHttp
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -18,7 +20,7 @@ import java.nio.charset.StandardCharsets
 
 class ApiClient {
     private val log = KotlinLogging.logger { }
-    val accessTokenHandler = DefaultAccessTokenHandler()
+    val accessTokenHandler = MigratingAccessTokenHandler(old = DefaultAccessTokenHandler(), new = NewAccessTokenHandler())
     private val client: HttpHandler = OkHttp()
     private val gson = Gson()
     private val sfQueryBase = "/services/data/${env(config_SALESFORCE_VERSION)}/query?q="
