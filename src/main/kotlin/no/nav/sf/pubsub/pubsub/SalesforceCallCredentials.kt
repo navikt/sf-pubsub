@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 
 class SalesforceCallCredentials(
     private val accessTokenHandler: AccessTokenHandler =
-        DefaultAccessTokenHandler(),
+        NewAccessTokenHandler(),
 ) : CallCredentials() {
     private val log = KotlinLogging.logger { }
 
