@@ -3,6 +3,8 @@ metadata:
   labels:
     team: teamnks
 spec:
+  ingresses:
+    - "https://sf-pubsub-etask.intern.nav.no"
   env:
     - name: SALESFORCE_TOPIC
       value: '/data/ChangeEvents'

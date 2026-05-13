@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets
 
 class ApiClient {
     private val log = KotlinLogging.logger { }
-    val accessTokenHandler = NewAccessTokenHandler()
+    val accessTokenHandler = DefaultAccessTokenHandler()
     private val client: HttpHandler = OkHttp()
     private val gson = Gson()
     private val sfQueryBase = "/services/data/${env(config_SALESFORCE_VERSION)}/query?q="
