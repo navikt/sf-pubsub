@@ -23,6 +23,8 @@ class PuzzelMappingCache(
 
     @Synchronized
     fun refreshCache() {
+        val dir = File("/tmp/files")
+        dir.mkdirs() // ensures /tmp/files exists
         val mappings = apiClient.fetchPuzzelChatMapping()
         File("/tmp/files/puzzleMapCache").writeText(mappings.toString())
         cache = mappings.associateBy { it.salesforceQueueId }

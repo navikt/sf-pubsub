@@ -81,10 +81,14 @@ class Application(
         Response(OK).body("$currentTimeStamp\nTest access (migration) result: " + migrationTokenHandler.testAccess())
     }
 
-    fun start() {
-        val dir = File("/tmp/files/subfolder")
+    fun initTmpFilesFolder() {
+        val dir = File("/tmp/files")
         dir.mkdirs() // ensures /tmp/files exists
         File(dir, "testfile").writeText("Content of test file")
+    }
+
+    fun start() {
+        initTmpFilesFolder()
         apiServer(8080).start()
 
         val replayPreset =
