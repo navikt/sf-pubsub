@@ -24,7 +24,7 @@ class PuzzelMappingCache(
     @Synchronized
     fun refreshCache() {
         val mappings = apiClient.fetchPuzzelChatMapping()
-        File("/tmp/puzzleMapCache").writeText(mappings.toString())
+        File("/tmp/files/puzzleMapCache").writeText(mappings.toString())
         cache = mappings.associateBy { it.salesforceQueueId }
     }
 }

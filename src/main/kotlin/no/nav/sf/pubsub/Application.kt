@@ -1,6 +1,7 @@
 package no.nav.sf.pubsub
 
 import com.salesforce.eventbus.protobuf.ReplayPreset
+import filesHandler
 import mu.KotlinLogging
 import no.nav.sf.pubsub.gui.Gui
 import no.nav.sf.pubsub.pubsub.PubSubClient
@@ -22,6 +23,7 @@ import org.http4k.routing.routes
 import org.http4k.server.Http4kServer
 import org.http4k.server.Netty
 import org.http4k.server.asServer
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -52,6 +54,8 @@ class Application(
             "/internal/testAccess/new" bind Method.GET to testAccessHandlerNew,
             "/internal/testAccess/validation" bind Method.GET to testAccessHandlerValidation,
             "/internal/testAccess/migration" bind Method.GET to testAccessHandlerMigration,
+            "/internal/files" bind Method.GET to filesHandler(File("/tmp/files")),
+            "/internal/files/{path:.*}" bind Method.GET to filesHandler(File("/tmp/files")),
         )
 
     val currentTimeStamp: String get() = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
@@ -78,6 +82,9 @@ class Application(
     }
 
     fun start() {
+        val dir = File("/tmp/files/subfolder")
+        dir.mkdirs() // ensures /tmp/files exists
+        File(dir, "testfile").writeText("Content of test file")
         apiServer(8080).start()
 
         val replayPreset =
