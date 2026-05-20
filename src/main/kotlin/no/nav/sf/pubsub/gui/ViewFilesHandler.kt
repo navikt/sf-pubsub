@@ -33,6 +33,12 @@ fun filesHandler(baseDir: File): HttpHandler =
                     ?.sortedWith(compareBy<File> { !it.isDirectory }.thenBy { it.name.lowercase() })
                     ?: emptyList()
 
+            val parentPath =
+                request.uri.path
+                    .trimEnd('/')
+                    .substringBeforeLast('/', "/")
+                    .ifEmpty { "/" }
+
             val html =
                 buildString {
                     append(
@@ -151,7 +157,7 @@ fun filesHandler(baseDir: File): HttpHandler =
                         append(
                             """
                             <div class="table">
-                                <a href="../" class="table-header">
+                                <a href="$parentPath" class="table-header">
                                     <div class="name-and-label-wrapper">
                                         ../
                                     </div>
@@ -217,6 +223,12 @@ fun filesHandler(baseDir: File): HttpHandler =
                     .replace("<", "&lt;")
                     .replace(">", "&gt;")
 
+            val parentPath =
+                request.uri.path
+                    .trimEnd('/')
+                    .substringBeforeLast('/', "/")
+                    .ifEmpty { "/" }
+
             val html =
                 """
                 <html>
@@ -279,7 +291,7 @@ fun filesHandler(baseDir: File): HttpHandler =
                 <body>
                     <div class="dataset-section">
 
-                        <a href="../" class="back-link">
+                        <a href="$parentPath" class="back-link">
                             ← Back
                         </a>
 

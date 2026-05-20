@@ -180,7 +180,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
             uri = "$recordId$#$$serviceChannelId$#$$workItemId",
         )
 
-    val useClientForHjelpemidlerCentralen = (mapping.queueApi == "q_chat_hjelpemidler") && !application.devContext
+    val useClientForHjelpemidlerCentralen = (mapping.queueApi == "q_sf_chat_hjelpemiddelsentralen") && !application.devContext
 
     log.info {
         "Created ETask for recordId=$recordId " +
