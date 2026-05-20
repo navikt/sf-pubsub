@@ -8,6 +8,10 @@ import java.io.File
     Example reference http4k:
             "/internal/files" bind Method.GET to filesHandler(File("/tmp/files")),
             "/internal/files/{path:.*}" bind Method.GET to filesHandler(File("/tmp/files")),
+
+    Also apply on boot:
+            val dir = File("/tmp/files")
+            dir.mkdirs() // ensures /tmp/files exists
  */
 fun filesHandler(baseDir: File): HttpHandler =
     { request ->
