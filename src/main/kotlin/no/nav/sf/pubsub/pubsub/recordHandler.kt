@@ -20,6 +20,7 @@ import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelClientHjelpeMiddel
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+import no.nav.sf.pubsub.puzzel.puzzelRequestCache
 import no.nav.sf.pubsub.reduceByWhitelist
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -141,17 +142,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     val entityName = header.get("entityName")?.asString
     val changeType = header.get("changeType")?.asString
 
-    if (application.devContext && entityName == "PendingServiceRouting" && changeType != "CREATE") {
-        File("/tmp/files/pendingServiceRoutingNotCreate").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
-        ignoreCounter.inc()
-        return@puzzelPSRRecordHandler true
-    }
-
-    // Only handle PendingServiceRouting CREATE
-    if (entityName != "PendingServiceRouting" ||
-        (changeType != "CREATE")
-    ) {
-        log.debug { "Ignoring event entity=$entityName changeType=$changeType" }
+    if (entityName != "PendingServiceRouting") {
         ignoreCounter.inc()
         return@puzzelPSRRecordHandler true
     }
@@ -162,6 +153,62 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
             ?.firstOrNull()
             ?.asString
             ?: throw IllegalStateException("Missing recordId in ChangeEventHeader")
+
+    // =========================================================
+    // UPDATE handling → invalidate cache if isPushed == true
+    // =========================================================
+    if (changeType == "UPDATE" && json.get("IsPushed")?.asBoolean == true) {
+        val requestId = puzzelRequestCache.remove(recordId)
+
+        if (requestId != null) {
+            if (application.devContext) {
+                File("/tmp/files/puzzelCacheUpdates")
+                    .appendText(
+                        "$currentTimeTag UPDATE(IsPushed=true) removed cache recordId=$recordId, requestId=$requestId\n",
+                    )
+            }
+            log.info {
+                "PendingServiceRouting UPDATE(IsPushed=true) → cache invalidated recordId=$recordId requestId=$requestId"
+            }
+        }
+
+        return@puzzelPSRRecordHandler true
+    }
+
+    // =========================================================
+    // DELETE handling → cancel in Puzzel if cached
+    // =========================================================
+    if (changeType == "DELETE") {
+        val requestId = puzzelRequestCache.remove(recordId)
+
+        if (requestId != null) {
+            if (application.devContext) {
+                File("/tmp/files/puzzelCacheUpdates")
+                    .appendText(
+                        "$currentTimeTag DELETE (cancel) removed cache recordId=$recordId, requestId=$requestId\n",
+                    )
+            }
+            log.info {
+                "PendingServiceRouting DELETE → found requestId=$requestId for recordId=$recordId (trigger cancel)"
+            }
+
+            puzzelClient.delete(requestId)
+        } else {
+            log.info {
+                "PendingServiceRouting DELETE → no cache entry for recordId=$recordId"
+            }
+        }
+
+        return@puzzelPSRRecordHandler true
+    }
+
+    // =========================================================
+    // Only handle CREATE
+    // =========================================================
+    if (changeType != "CREATE") {
+        ignoreCounter.inc()
+        return@puzzelPSRRecordHandler true
+    }
 
     val workItemId =
         json.get("WorkItemId")?.asString
@@ -197,9 +244,9 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     }
 
     if (useClientForHjelpemidlerCentralen) {
-        puzzelClientHjelpeMiddel.send(eTask)
+        puzzelClientHjelpeMiddel.send(eTask, recordId)
     } else {
-        puzzelClient.send(eTask)
+        puzzelClient.send(eTask, recordId)
     }
 
     true

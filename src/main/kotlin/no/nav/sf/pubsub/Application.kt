@@ -9,6 +9,7 @@ import no.nav.sf.pubsub.pubsub.Valkey
 import no.nav.sf.pubsub.puzzel.ETask
 import no.nav.sf.pubsub.puzzel.puzzelClient
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+import no.nav.sf.pubsub.puzzel.puzzelRequestCache
 import no.nav.sf.pubsub.token.DefaultAccessTokenHandler
 import no.nav.sf.pubsub.token.MigratingAccessTokenHandler
 import no.nav.sf.pubsub.token.NewAccessTokenHandler
@@ -56,6 +57,7 @@ class Application(
             "/internal/testAccess/migration" bind Method.GET to testAccessHandlerMigration,
             "/internal/files" bind Method.GET to filesHandler(File("/tmp/files")),
             "/internal/files/{path:.*}" bind Method.GET to filesHandler(File("/tmp/files")),
+            "/internal/recordMap" bind Method.GET to { Response(OK).body(puzzelRequestCache.dump()) },
         )
 
     val currentTimeStamp: String get() = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)

@@ -32,11 +32,19 @@ class PuzzelClient(
         val eTask: ETask,
     )
 
+    data class PuzzelResponse(
+        val result: Long,
+        val code: Int,
+    )
+
     /**
      * Sends an eTask to Puzzel.
      * Retries only on network errors or safe server errors (e.g., 429, 503).
      */
-    fun send(task: ETask) {
+    fun send(
+        task: ETask,
+        recordId: String,
+    ) {
         val url = "$apiBaseUrl/$customerKey/etasks"
         val eTaskRequest = ETaskRequest(task)
         val jsonBody = gson.toJson(eTaskRequest)
@@ -61,7 +69,31 @@ class PuzzelClient(
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
 
                 when {
-                    response.status.successful -> return // 2xx -> done
+                    response.status.successful -> {
+                        try {
+                            val parsed =
+                                gson.fromJson(
+                                    response.bodyString(),
+                                    PuzzelResponse::class.java,
+                                )
+
+                            if (parsed.code != 0) {
+                                log.error("Puzzel response with unknown code (not 0): ${response.bodyString()}")
+                            } else {
+                                val requestId = parsed.result
+                                puzzelRequestCache.put(recordId, requestId)
+                                if (application.devContext) {
+                                    File("/tmp/files/puzzelCacheUpdates")
+                                        .appendText(
+                                            "$currentTimeTag CREATE added cache recordId=$recordId, requestId=$requestId\n",
+                                        )
+                                }
+                            }
+                        } catch (e: Exception) {
+                            log.error(e) { "Puzzel response parsing exception: ${response.bodyString()}" }
+                        }
+                        return
+                    } // 2xx -> done
                     response.status.code in listOf(429, 503) -> {
                         log.warn { "Attempt retry on safe retryable status ${response.status}" }
                     } else -> {
@@ -80,6 +112,73 @@ class PuzzelClient(
         }
 
         throw RuntimeException("Failed to send eTask to Puzzel after $attempt attempts")
+    }
+
+    /**
+     * Deletes an eTask in Puzzel.
+     * Retries only on network errors or safe server errors (e.g., 429, 503).
+     */
+    fun delete(requestId: Long) {
+        val url = "$apiBaseUrl/$customerKey/etasks/$requestId/delete"
+
+        var attempt = 1
+        while (attempt <= 3) {
+            val request =
+                Request(Method.POST, url)
+                    .header("Authorization", "Bearer ${accessTokenHandler.accessToken}")
+
+            try {
+                log.info {
+                    "Deleting eTask in Puzzel requestId=$requestId (attempt $attempt)"
+                }
+
+                val response = httpClient(request)
+
+                if (application.devContext) {
+                    File("/tmp/files/latestPuzzleDeleteResponse")
+                        .writeText(currentTimeTag + "\n" + response.toMessage())
+                }
+
+                log.info {
+                    "Puzzel delete response requestId=$requestId: " +
+                        "${response.status} ${response.bodyString()}"
+                }
+
+                when {
+                    response.status.successful -> {
+                        return
+                    }
+
+                    response.status.code in listOf(429, 503) -> {
+                        log.warn {
+                            "Retryable delete response requestId=$requestId: ${response.status}"
+                        }
+                    }
+
+                    else -> {
+                        throw RuntimeException(
+                            "Failed to delete eTask requestId=$requestId, " +
+                                "response: ${response.status} ${response.bodyString()}",
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                log.error(e) {
+                    "Error deleting eTask requestId=$requestId attempt $attempt"
+                }
+
+                if (attempt == 3) {
+                    throw e
+                }
+            }
+
+            runBlocking { delay(attempt * 1000L) }
+            attempt++
+        }
+
+        throw RuntimeException(
+            "Failed to delete eTask requestId=$requestId after ${attempt - 1} attempts",
+        )
     }
 
     data class PuzzelQueuesResponse(
