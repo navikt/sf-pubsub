@@ -127,9 +127,6 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
 }
 
 val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@{ record ->
-    if (application.devContext) {
-        File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
-    }
 
     val json = record.asJsonObject()
 
@@ -145,6 +142,11 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     if (entityName != "PendingServiceRouting") {
         ignoreCounter.inc()
         return@puzzelPSRRecordHandler true
+    }
+
+    if (application.devContext) {
+        File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
+        File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
     }
 
     val recordId =
