@@ -4,7 +4,9 @@ import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import no.nav.sf.pubsub.application
 import no.nav.sf.pubsub.config_PUZZEL_API_BASE
+import no.nav.sf.pubsub.currentTimeTag
 import no.nav.sf.pubsub.env
 import no.nav.sf.pubsub.token.AccessTokenHandler
 import no.nav.sf.pubsub.token.PuzzelAccessTokenHandler
@@ -53,7 +55,9 @@ class PuzzelClient(
                 log.info { "Sending eTask to Puzzel (attempt $attempt): $jsonBody" }
                 val response = httpClient(request)
 
-                File("/tmp/latestPuzzleSendResponse").writeText(response.toMessage())
+                if (application.devContext) {
+                    File("/tmp/latestPuzzleSendResponse").writeText(currentTimeTag + "\n" + response.toMessage())
+                }
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
 
                 when {
