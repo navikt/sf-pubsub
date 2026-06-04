@@ -56,7 +56,7 @@ class PuzzelClient(
                 val response = httpClient(request)
 
                 if (application.devContext) {
-                    File("/tmp/latestPuzzleSendResponse").writeText(currentTimeTag + "\n" + response.toMessage())
+                    File("/tmp/files/latestPuzzleSendResponse").writeText(currentTimeTag + "\n" + response.toMessage())
                 }
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
 
