@@ -11,6 +11,7 @@ import mu.withLoggingContext
 import no.nav.sf.pubsub.Metrics
 import no.nav.sf.pubsub.Metrics.ignoreCounter
 import no.nav.sf.pubsub.application
+import no.nav.sf.pubsub.currentTimeTag
 import no.nav.sf.pubsub.kafka.Kafka
 import no.nav.sf.pubsub.logs.EventTypeTeamLog
 import no.nav.sf.pubsub.logs.TEAM_LOGS
@@ -125,7 +126,9 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
 }
 
 val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@{ record ->
-    File("/tmp/latestRecord").writeText(record.asJsonObject().toString())
+    if (application.devContext) {
+        File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
+    }
 
     val json = record.asJsonObject()
 
@@ -138,7 +141,13 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     val entityName = header.get("entityName")?.asString
     val changeType = header.get("changeType")?.asString
 
-    // Only handle PendingServiceRouting CREATE / UPDATE
+    if (application.devContext && entityName == "PendingServiceRouting" && changeType != "CREATE") {
+        File("/tmp/files/pendingServiceRoutingNotCreate").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
+        ignoreCounter.inc()
+        return@puzzelPSRRecordHandler true
+    }
+
+    // Only handle PendingServiceRouting CREATE
     if (entityName != "PendingServiceRouting" ||
         (changeType != "CREATE")
     ) {
