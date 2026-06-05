@@ -26,6 +26,9 @@
         </filter>
     </appender>
 
+    <logger name="io.netty.channel.DefaultChannelPipeline" level="ERROR"/>
+    <logger name="io.netty.channel.nio" level="ERROR"/>
+
     <root level="INFO">
         <appender-ref ref="default-json" />
         <appender-ref ref="team-logs" />
