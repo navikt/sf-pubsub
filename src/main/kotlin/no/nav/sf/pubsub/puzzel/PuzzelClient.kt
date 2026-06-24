@@ -63,7 +63,7 @@ class PuzzelClient(
                 log.info { "Sending eTask to Puzzel (attempt $attempt): $jsonBody" }
                 val response = httpClient(request)
 
-                if (application.devContext) {
+                if (true) {
                     File("/tmp/files/latestPuzzleSendResponse").writeText(currentTimeTag + "\n" + response.toMessage())
                 }
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
@@ -82,7 +82,7 @@ class PuzzelClient(
                             } else {
                                 val requestId = parsed.result
                                 puzzelRequestCache.put(recordId, requestId)
-                                if (application.devContext) {
+                                if (true) {
                                     File("/tmp/files/puzzelCacheUpdates")
                                         .appendText(
                                             "$currentTimeTag CREATE added cache recordId=$recordId, requestId=$requestId\n",
@@ -134,7 +134,7 @@ class PuzzelClient(
 
                 val response = httpClient(request)
 
-                if (application.devContext) {
+                if (true) {
                     File("/tmp/files/latestPuzzleDeleteResponse")
                         .writeText(currentTimeTag + "\n" + response.toMessage())
                 }

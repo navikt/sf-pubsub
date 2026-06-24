@@ -51,6 +51,8 @@ spec:
         - application: logging
           namespace: nais-system
       external:
+        - host: api.puzzel.com
+        - host: app.puzzel.com
         - host: login.salesforce.com
         - host: navdialog.my.salesforce.com
         - host: api.pubsub.salesforce.com

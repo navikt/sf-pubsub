@@ -144,7 +144,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         return@puzzelPSRRecordHandler true
     }
 
-    if (application.devContext) {
+    if (true) {
         File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
         File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
     }
@@ -163,7 +163,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         val requestId = puzzelRequestCache.remove(recordId)
 
         if (requestId != null) {
-            if (application.devContext) {
+            if (true) {
                 File("/tmp/files/puzzelCacheUpdates")
                     .appendText(
                         "$currentTimeTag UPDATE(IsPushed=true) removed cache recordId=$recordId, requestId=$requestId\n",
@@ -184,7 +184,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         val requestId = puzzelRequestCache.remove(recordId)
 
         if (requestId != null) {
-            if (application.devContext) {
+            if (true) {
                 File("/tmp/files/puzzelCacheUpdates")
                     .appendText(
                         "$currentTimeTag DELETE (cancel) removed cache recordId=$recordId, requestId=$requestId\n",
