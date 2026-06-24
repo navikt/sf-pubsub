@@ -11,4 +11,4 @@ spec:
     - name: PUZZEL_TOKEN_URL
       value: 'https://app.puzzel.com/id/connect/token'
     - name: PUZZEL_API_BASE
-      value: 'https://api.puzzel.com/ContactCentre5'
+      value: 'https://api.puzzel.com/contactcentre5/customers'
