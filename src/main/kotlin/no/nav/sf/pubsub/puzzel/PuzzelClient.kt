@@ -57,7 +57,7 @@ class PuzzelClient(
                     .header("Authorization", "Bearer ${accessTokenHandler.accessToken}")
                     .body(jsonBody)
 
-            File("/tmp/latestPuzzleSendRequest").writeText("Request:\n" + request.toMessage())
+            File("/tmp/files/latestPuzzleSendRequest").writeText("Request:\n" + request.toMessage())
 
             try {
                 log.info { "Sending eTask to Puzzel (attempt $attempt): $jsonBody" }
