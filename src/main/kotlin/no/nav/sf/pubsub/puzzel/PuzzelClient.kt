@@ -66,6 +66,7 @@ class PuzzelClient(
                 if (true) {
                     File("/tmp/files/latestPuzzleSendResponse").writeText(currentTimeTag + "\n" + response.toMessage())
                 }
+                log.info("Puzzel Sent body: ${request.bodyString()}")
                 log.info { "Puzzel response: ${response.status} ${response.bodyString()}" }
 
                 when {
