@@ -146,7 +146,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
     if (true) {
         File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
-        // File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
+        File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
     }
 
     val recordId =
@@ -211,6 +211,8 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         ignoreCounter.inc()
         return@puzzelPSRRecordHandler true
     }
+
+    log.info(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
 
     val workItemId =
         json.get("WorkItemId")?.asString
