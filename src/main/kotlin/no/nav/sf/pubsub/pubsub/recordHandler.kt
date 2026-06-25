@@ -233,27 +233,33 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     // Lookup mapping (may refetch internally)
     val mapping = puzzelMappingCache.getByQueueId(queueId)
 
-    val eTask =
-        ETask(
-            to = mapping.chatName,
-            queueKey = mapping.queueApi,
-            uri = "$recordId$#$$serviceChannelId$#$$workItemId",
-        )
-
-    val useClientForHjelpemidlerCentralen = (mapping.queueApi == "q_sf_chat_hjelpemiddelsentralen") && !application.devContext
-
-    log.info {
-        "Created ETask for recordId=$recordId " +
-            "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $useClientForHjelpemidlerCentralen"
-    }
-
-    if (useClientForHjelpemidlerCentralen) {
-        puzzelClientHjelpeMiddel.send(eTask, recordId)
+    if (mapping == null) {
+        log.warn("Queue id is null, will ignore event")
+        true
     } else {
-        puzzelClient.send(eTask, recordId)
-    }
+        val eTask =
+            ETask(
+                to = mapping.chatName,
+                queueKey = mapping.queueApi,
+                uri = "$recordId$#$$serviceChannelId$#$$workItemId",
+            )
 
-    true
+        val useClientForHjelpemidlerCentralen =
+            (mapping.queueApi == "q_sf_chat_hjelpemiddelsentralen") && !application.devContext
+
+        log.info {
+            "Created ETask for recordId=$recordId " +
+                "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $useClientForHjelpemidlerCentralen"
+        }
+
+        if (useClientForHjelpemidlerCentralen) {
+            puzzelClientHjelpeMiddel.send(eTask, recordId)
+        } else {
+            puzzelClient.send(eTask, recordId)
+        }
+
+        true
+    }
 }
 
 fun GenericRecord.asJsonObject() = JsonParser.parseString(this.toString()) as JsonObject

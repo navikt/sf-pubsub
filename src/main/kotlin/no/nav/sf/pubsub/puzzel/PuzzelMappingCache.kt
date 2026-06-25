@@ -1,24 +1,32 @@
 package no.nav.sf.pubsub.puzzel
 
+import mu.KotlinLogging
 import no.nav.sf.pubsub.salesforce.ApiClient
 import no.nav.sf.pubsub.salesforce.apiClient
+import org.http4k.core.q
 import java.io.File
 
 class PuzzelMappingCache(
     private val apiClient: ApiClient,
 ) {
+    private val log = KotlinLogging.logger { }
+
     @Volatile
     private var cache: Map<String, PuzzelChatMapping> = emptyMap()
 
-    fun getByQueueId(queueId: String): PuzzelChatMapping {
+    fun getByQueueId(queueId: String): PuzzelChatMapping? {
         // First try cache
         cache[queueId]?.let { return it }
 
         // Not found -> refetch
         refreshCache()
 
-        // Try again
-        return cache[queueId] ?: throw NoSuchElementException("No Puzzel mapping found for queueId=$queueId")
+        if (cache[queueId] == null) {
+            log.warn("No Puzzel mapping found for queueId=$queueId, will ignore")
+            return null
+        } else {
+            return cache[queueId]
+        }
     }
 
     @Synchronized
