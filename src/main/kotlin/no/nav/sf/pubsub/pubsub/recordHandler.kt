@@ -146,7 +146,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
     if (true) {
         File("/tmp/files/latestRecord").writeText(currentTimeTag + "\n" + record.asJsonObject().toString())
-        File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
+        // File("/tmp/files/pendingServiceRoutingEvents").appendText(currentTimeTag + "\n" + record.asJsonObject().toString() + "\n\n")
     }
 
     val recordId =
