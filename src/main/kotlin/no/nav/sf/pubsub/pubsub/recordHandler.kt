@@ -230,8 +230,15 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
         return@puzzelPSRRecordHandler true // Continue processing
     }
 
+    if (queueId == "00GQC00000IausX2AR") {
+        log.info("FOCUS uføretrygd recieved - before mapping")
+    }
     // Lookup mapping (may refetch internally)
     val mapping = puzzelMappingCache.getByQueueId(queueId)
+
+    if (queueId == "00GQC00000IausX2AR") {
+        log.info("FOCUS uføretrygd mapping: $mapping")
+    }
 
     if (mapping == null) {
         log.warn("Queue id is null, will ignore event")
