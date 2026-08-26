@@ -53,13 +53,13 @@ dependencies {
     // implementation 'io.netty:netty-codec:4.1.125.Final' //Transitive for grpc-netty
     //implementation 'io.netty:netty-codec-http:4.2.11.Final' //Transitive for grpc-netty
 
-    implementation 'io.lettuce:lettuce-core:7.6.0.RELEASE'
+    implementation 'io.lettuce:lettuce-core:7.7.0.RELEASE'
 
     implementation "org.apache.kafka:kafka-clients:4.1.2"
 
     // Avro core library
-    implementation 'org.apache.avro:avro:1.12.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.21.1' //Transitive dependency bump
+    implementation 'org.apache.avro:avro:1.12.2'
+    // implementation 'com.fasterxml.jackson.core:jackson-core:2.21.1' //Transitive dependency bump
 
     implementation 'org.yaml:snakeyaml:2.0'
 
