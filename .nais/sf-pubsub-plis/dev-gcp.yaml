@@ -5,6 +5,9 @@ metadata:
 spec:
   ingresses:
      - "https://sf-pubsub-plis.intern.dev.nav.no"
+  envFrom:
+    - configmap: salesforce-common
+    - secret: sf-pubsub-sit2
   env:
      - name: KAFKA_TOPIC
        value: 'hot-crm.payment-claim' 
