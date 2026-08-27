@@ -20,6 +20,9 @@ spec:
     - team: hot-crm
       application: sf-pubsub-payment-claim
       access: readwrite
+    - team: hot-crm
+      application: sf-payment-claim
+      access: read
     - team: plis # <- Update when team exist
       application: plis-app # <- Update when app exist
       access: read
