@@ -9,6 +9,8 @@ spec:
     - configmap: salesforce-common
     - secret: sf-pubsub-sit2
   env:
+     - name: WHITELIST_FILE
+       value: '/whitelist/plis/dev.json'
      - name: KAFKA_TOPIC
        value: 'hot-crm.payment-claim' 
      - name: SALESFORCE_TOPIC

@@ -75,7 +75,7 @@ val changeDataCaptureKafkaRecordHandler: (GenericRecord) -> Boolean = {
 }
 
 val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
-    File("/tmp/latestRecord").writeText(it.asJsonObject().toString())
+    File("/tmp/files/latestRecord").writeText(it.asJsonObject().toString())
     val jsonObject = it.asJsonObject()
     val id = UUID.randomUUID().toString()
     val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
