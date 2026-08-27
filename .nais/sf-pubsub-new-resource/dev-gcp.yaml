@@ -4,14 +4,15 @@ metadata:
     team: hot-crm
 spec:
   ingresses:
-     - "https://sf-pubsub-payment-status.intern.dev.nav.no"
+     - "https://sf-pubsub-new-resource.intern.dev.nav.no"
   envFrom:
     - configmap: salesforce-common
     - secret: sf-pubsub-sit2
   env:
      - name: WHITELIST_FILE
-       value: '/whitelist/payment-status/dev.json'
+       value: '/whitelist/new-resource/dev.json'
      - name: KAFKA_TOPIC
-       value: 'hot-crm.payment-status'
+       value: 'hot-crm.new-resource' 
      - name: SALESFORCE_TOPIC
-       value: '/event/HOT_LOS_PaymentStatus__e'
+       value: '/event/HOT_LOS_NewResource__e'
+       
