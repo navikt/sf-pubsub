@@ -1,3 +1,4 @@
 {
-    "CreatedById": "ALL"
+    "CreatedById": "ALL",
+    "Payload__c": "ALL"
 }
