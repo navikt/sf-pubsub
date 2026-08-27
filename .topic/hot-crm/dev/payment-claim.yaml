@@ -23,6 +23,6 @@ spec:
     - team: hot-crm
       application: sf-payment-claim
       access: read
-    - team: plis # <- Update when team exist
-      application: plis-app # <- Update when app exist
+    - team: oksty # <- Update when team exist
+      application: tolketjenester # <- Update when app exist
       access: read
