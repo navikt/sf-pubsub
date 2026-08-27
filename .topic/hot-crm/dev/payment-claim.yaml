@@ -1,0 +1,25 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: payment-claim
+  namespace: hot-crm
+  labels:
+    team: hot-crm
+  annotations:
+    kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
+spec:
+  pool: nav-dev
+  config:
+    cleanupPolicy: delete
+    minimumInSyncReplicas: 1
+    partitions: 1
+    replication: 3
+    retentionBytes: -1
+    retentionHours: 720 #30 days
+  acl:
+    - team: hot-crm
+      application: sf-pubsub-plis
+      access: readwrite
+    - team: plis # <- Update when team exist
+      application: plis-app # <- Update when app exist
+      access: read
