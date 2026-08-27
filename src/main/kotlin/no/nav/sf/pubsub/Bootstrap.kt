@@ -22,7 +22,8 @@ val application: Application =
                 puzzelMappingCache.refreshCache()
                 Application(puzzelPSRRecordHandler)
             }
-            "sf-pubsub-plis" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-payment-claim" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-payment-status" -> Application(randomUUIDKafkaRecordHandler)
             else -> throw RuntimeException("Attempted to deploy unknown app,  make sure it is declared in Bootstrap.kt")
             // changeDataCaptureKafkaRecordHandler <- example of CDC handler
         }
