@@ -14,4 +14,4 @@ spec:
      - name: KAFKA_TOPIC
        value: 'hot-crm.payment-claim' 
      - name: SALESFORCE_TOPIC
-       value: 'event/HOT_LOS_PaymentClaim__e' 
+       value: '/event/HOT_LOS_PaymentClaim__e'
