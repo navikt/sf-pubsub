@@ -23,7 +23,7 @@ val application: Application =
                 Application(puzzelPSRRecordHandler)
             }
             "sf-pubsub-payment-claim" -> Application(randomUUIDKafkaRecordHandler)
-            "sf-pubsub-payment-status" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-new-resource" -> Application(randomUUIDKafkaRecordHandler)
             else -> throw RuntimeException("Attempted to deploy unknown app,  make sure it is declared in Bootstrap.kt")
             // changeDataCaptureKafkaRecordHandler <- example of CDC handler
         }
