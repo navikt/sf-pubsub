@@ -4,14 +4,14 @@ metadata:
     team: hot-crm
 spec:
   ingresses:
-    - "https://sf-pubsub-plis.intern.nav.no"
+    - "https://sf-pubsub-payment-status.intern.nav.no"
   envFrom:
     - configmap: salesforce-common
     - secret: sf-pubsub-prod
   env:
     - name: WHITELIST_FILE
-      value: '/whitelist/plis/prod.json'
+      value: '/whitelist/payment-status/prod.json'
     - name: KAFKA_TOPIC
-      value: 'hot-crm.payment-claim'
+      value: 'hot-crm.payment-status'
     - name: SALESFORCE_TOPIC
-      value: '/event/HOT_LOS_PaymentClaim__e'
+      value: '/event/HOT_LOS_PaymentStatus__e'

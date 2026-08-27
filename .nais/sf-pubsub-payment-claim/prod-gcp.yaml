@@ -1,0 +1,17 @@
+metadata:
+  namespace: hot-crm
+  labels:
+    team: hot-crm
+spec:
+  ingresses:
+    - "https://sf-pubsub-payment-claim.intern.nav.no"
+  envFrom:
+    - configmap: salesforce-common
+    - secret: sf-pubsub-prod
+  env:
+    - name: WHITELIST_FILE
+      value: '/whitelist/payment-claim/prod.json'
+    - name: KAFKA_TOPIC
+      value: 'hot-crm.payment-claim'
+    - name: SALESFORCE_TOPIC
+      value: '/event/HOT_LOS_PaymentClaim__e'
