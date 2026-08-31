@@ -1,1 +1,6 @@
-{}
+{
+    "CreatedDate": "ALL",
+    "CreatedById": "ALL",
+    "Ident__c": "ALL",
+    "Workplace__c": "ALL"
+}
