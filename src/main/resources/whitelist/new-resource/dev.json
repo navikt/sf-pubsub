@@ -2,5 +2,8 @@
     "CreatedDate": "ALL",
     "CreatedById": "ALL",
     "Ident__c": "ALL",
-    "Workplace__c": "ALL"
+    "WorkplaceAddress__c": "ALL",
+    "RegionNumber__c": "ALL",
+    "EmailAddress__c": "ALL",
+    "BankAccountNumber__c": "ALL"
 }

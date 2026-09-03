@@ -1,4 +1,10 @@
 {
     "CreatedById": "ALL",
-    "Payload__c": "ALL"
+    "Payload__c": "ALL",
+    "CreatedDate": "DATE_FROM_MILLIS",
+    "BankAccountNumber__c": "ALL",
+    "RegionNumber__c": "ALL",
+    "WorkplaceAddress__c": "ALL",
+    "EmailAddress__c": "ALL",
+    "Ident__c": "ALL"
 }
