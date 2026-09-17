@@ -20,9 +20,6 @@ spec:
     - team: hot-crm
       application: sf-pubsub-payment-claim
       access: readwrite
-    - team: oksty 
-      application: sf-pubsub-payment-claim 
-      access: read
-    - team: oksty-kafka-manager
+    - team: oksty.oksty-kafka-manager
       application: sf-pubsub-payment-claim
       access: read
