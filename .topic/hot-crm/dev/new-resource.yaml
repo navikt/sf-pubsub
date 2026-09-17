@@ -20,6 +20,9 @@ spec:
     - team: hot-crm
       application: sf-pubsub-new-resource
       access: readwrite
-    - team: oksty # <- Update when team exist
-      application: tolketjenester # <- Update when app exist
+    - team: oksty 
+      application: sf-pubsub-new-resource 
+      access: read
+    - team: oksty-kafka-manager
+      application: kafka-manager
       access: read
