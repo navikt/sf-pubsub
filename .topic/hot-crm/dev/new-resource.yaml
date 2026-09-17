@@ -20,6 +20,9 @@ spec:
     - team: hot-crm
       application: sf-pubsub-new-resource
       access: readwrite
-    - team: oksty.oksty-kafka-manager
-      application: sf-pubsub-new-resource
+    - team: oksty 
+      application: tolketjenester 
+      access: read
+    - team: oksty
+      application: oksty-kafka-manager
       access: read
