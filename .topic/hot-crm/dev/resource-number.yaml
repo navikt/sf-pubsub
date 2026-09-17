@@ -1,7 +1,7 @@
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
-  name: new-resource
+  name: resource-number
   namespace: hot-crm
   labels:
     team: hot-crm
@@ -18,12 +18,11 @@ spec:
     retentionHours: 720 #30 days
   acl:
     - team: hot-crm
-      application: sf-pubsub-new-resource
-      access: readwrite
+      application: sf-resource-number
+      access: read
     - team: oksty 
       application: tolketjenester 
-      access: read
+      access: readwrite
     - team: oksty
       application: oksty-kafka-manager
       access: read
-      
