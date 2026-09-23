@@ -29,3 +29,6 @@ spec:
     - team: oksty
       application: oksty-kafka-manager
       access: read
+    - team: hot-crm
+      application: hot-crm-kafka-manager
+      access: read
