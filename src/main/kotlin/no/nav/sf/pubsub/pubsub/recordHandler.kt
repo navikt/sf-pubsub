@@ -89,6 +89,28 @@ val randomUUIDKafkaRecordHandler: (GenericRecord) -> Boolean = {
     }
 }
 
+fun setUUIDFromPayloadFieldKafkaRecordHandler(fieldName: String): (GenericRecord) -> Boolean =
+    {
+        File("/tmp/files/latestRecord").writeText(it.asJsonObject().toString())
+        val jsonObject = it.asJsonObject()
+
+        val id =
+            jsonObject.get(fieldName)?.takeIf { field -> !field.isJsonNull }?.asString
+                ?: UUID.randomUUID().toString().also {
+                    log.warn { "Field '$fieldName' missing/null on record, falling back to random UUID as Kafka key" }
+                }
+
+        val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
+        try {
+            Kafka.kafkaProducer.send(kafkaRecord).get()
+            log.info { "Sent a record to topic ${Kafka.topic} with id from field '$fieldName': $id" }
+            true
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            false
+        }
+    }
+
 val appendToPodFileHandler: (GenericRecord) -> Boolean = {
     val jsonObject = it.asJsonObject()
     log.info { "Event receieved: $jsonObject" }

@@ -3,10 +3,13 @@ package no.nav.sf.pubsub
 import no.nav.sf.pubsub.logs.EventTypeTeamLog
 import no.nav.sf.pubsub.pubsub.appendToPodFileHandler
 import no.nav.sf.pubsub.pubsub.localRecordHandler
+import no.nav.sf.pubsub.pubsub.payloadFieldKafkaRecordHandler
 import no.nav.sf.pubsub.pubsub.puzzelPSRRecordHandler
 import no.nav.sf.pubsub.pubsub.randomUUIDKafkaRecordHandler
 import no.nav.sf.pubsub.pubsub.teamLogsRecordHandler
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+
+private const val EXTERNAL_ID_FIELD = "External_Id__c"
 
 val application: Application =
     if (isLocal) {
@@ -22,7 +25,7 @@ val application: Application =
                 puzzelMappingCache.refreshCache()
                 Application(puzzelPSRRecordHandler)
             }
-            "sf-pubsub-payment-claim" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-payment-claim" -> Application(setUUIDFromPayloadFieldKafkaRecordHandler(EXTERNAL_ID_FIELD))
             "sf-pubsub-new-resource" -> Application(randomUUIDKafkaRecordHandler)
             else -> throw RuntimeException("Attempted to deploy unknown app,  make sure it is declared in Bootstrap.kt")
             // changeDataCaptureKafkaRecordHandler <- example of CDC handler
