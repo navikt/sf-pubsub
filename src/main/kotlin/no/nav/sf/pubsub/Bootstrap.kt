@@ -3,7 +3,7 @@ package no.nav.sf.pubsub
 import no.nav.sf.pubsub.logs.EventTypeTeamLog
 import no.nav.sf.pubsub.pubsub.appendToPodFileHandler
 import no.nav.sf.pubsub.pubsub.localRecordHandler
-import no.nav.sf.pubsub.pubsub.payloadFieldKafkaRecordHandler
+import no.nav.sf.pubsub.pubsub.setUUIDFromPayloadFieldKafkaRecordHandler
 import no.nav.sf.pubsub.pubsub.puzzelPSRRecordHandler
 import no.nav.sf.pubsub.pubsub.randomUUIDKafkaRecordHandler
 import no.nav.sf.pubsub.pubsub.teamLogsRecordHandler
