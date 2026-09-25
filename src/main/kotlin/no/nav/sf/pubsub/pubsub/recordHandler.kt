@@ -94,20 +94,21 @@ fun setUUIDFromPayloadFieldKafkaRecordHandler(fieldName: String): (GenericRecord
         File("/tmp/files/latestRecord").writeText(it.asJsonObject().toString())
         val jsonObject = it.asJsonObject()
 
-        val id =
-            jsonObject.get(fieldName)?.takeIf { field -> !field.isJsonNull }?.asString
-                ?: UUID.randomUUID().toString().also {
-                    log.warn { "Field '$fieldName' missing/null on record, falling back to random UUID as Kafka key" }
-                }
+        val id = jsonObject.get(fieldName)?.takeIf { field -> !field.isJsonNull }?.asString
 
-        val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
-        try {
-            Kafka.kafkaProducer.send(kafkaRecord).get()
-            log.info { "Sent a record to topic ${Kafka.topic} with id from field '$fieldName': $id" }
-            true
-        } catch (e: Throwable) {
-            e.printStackTrace()
+        if (id == null) {
+            log.error { "Field '$fieldName' is required in Salesforce but missing/null on record - cannot set Kafka key" }
             false
+        } else {
+            val kafkaRecord = ProducerRecord(Kafka.topic, id, reduceByWhitelist(jsonObject.toString()))
+            try {
+                Kafka.kafkaProducer.send(kafkaRecord).get()
+                log.info { "Sent a record to topic ${Kafka.topic} with id from field '$fieldName': $id" }
+                true
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                false
+            }
         }
     }
 
