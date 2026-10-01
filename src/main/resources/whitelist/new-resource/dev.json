@@ -5,5 +5,8 @@
     "WorkplaceAddress__c": "ALL",
     "RegionNumber__c": "ALL",
     "EmailAddress__c": "ALL",
-    "BankAccountNumber__c": "ALL"
+    "BankAccountNumber__c": "ALL",
+    "FirstName__c": "ALL",
+    "LastName__c": "ALL",
+    "MiddleName__c": "ALL"
 }
