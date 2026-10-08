@@ -16,6 +16,7 @@ import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import mu.KotlinLogging
 import no.nav.sf.pubsub.Metrics
+import no.nav.sf.pubsub.recordhandling.common.silentRecordHandler
 import no.nav.sf.pubsub.useValkey
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericDatumReader

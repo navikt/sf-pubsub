@@ -1,13 +1,13 @@
 package no.nav.sf.pubsub
 
 import no.nav.sf.pubsub.logs.EventTypeTeamLog
-import no.nav.sf.pubsub.pubsub.appendToPodFileHandler
-import no.nav.sf.pubsub.pubsub.localRecordHandler
-import no.nav.sf.pubsub.pubsub.puzzelPSRRecordHandler
-import no.nav.sf.pubsub.pubsub.randomUUIDKafkaRecordHandler
-import no.nav.sf.pubsub.pubsub.setUUIDFromPayloadFieldKafkaRecordHandler
-import no.nav.sf.pubsub.pubsub.teamLogsRecordHandler
+import no.nav.sf.pubsub.recordhandling.common.appendToPodFileHandler
+import no.nav.sf.pubsub.recordhandling.common.localRecordHandler
+import no.nav.sf.pubsub.recordhandling.common.randomUUIDKafkaRecordHandler
+import no.nav.sf.pubsub.recordhandling.common.setUUIDFromPayloadFieldKafkaRecordHandler
+import no.nav.sf.pubsub.recordhandling.common.teamLogsRecordHandler
 import no.nav.sf.pubsub.puzzel.puzzelMappingCache
+import no.nav.sf.pubsub.recordhandling.teamnks.puzzelPSRRecordHandler
 
 private const val EXTERNAL_ID_FIELD = "External_Id__c"
 
