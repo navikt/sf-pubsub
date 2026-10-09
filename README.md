@@ -1,4 +1,4 @@
-# sf-pubsub
+# sf-pubsub [<img align="right" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="18" alt="GitHub repository" />](https://github.com/navikt/sf-pubsub)
 
 Integrasjonsapp for å speile data fra Salesforce Platform Events og Change Data Capture Events til systemer som Kafka, Prometheus, Kibana osv. via Pub/Sub API.
 
