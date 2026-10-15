@@ -136,5 +136,4 @@ fun teamLogsRecordHandler(eventType: EventTypeTeamLog): (GenericRecord) -> Boole
     }
 }
 
-
 fun GenericRecord.asJsonObject() = JsonParser.parseString(this.toString()) as JsonObject
