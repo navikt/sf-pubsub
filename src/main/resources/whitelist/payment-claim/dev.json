@@ -6,5 +6,6 @@
     "RegionNumber__c": "ALL",
     "WorkplaceAddress__c": "ALL",
     "EmailAddress__c": "ALL",
-    "Ident__c": "ALL"
+    "Ident__c": "ALL",
+    "Type__c": "ALL"
 }
