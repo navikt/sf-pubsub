@@ -1,7 +1,7 @@
 metadata:
-  namespace: ips
+  namespace: jobbsporet
   labels:
-    team: ips
+    team: jobbsporet
 spec:
   env:
     - name: WHITELIST_FILE
