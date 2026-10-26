@@ -19,4 +19,4 @@ jobs:
     with:
       DEPLOY_APP: sf-pubsub-worktrail-updates
       DEPLOY_CLUSTER: dev-gcp
-      DEPLOY_NAMESPACE: hot-crm # TODO replace with folder structure or file scanning in future to support deploy ALL
+      DEPLOY_NAMESPACE: jobbsporet # TODO replace with folder structure or file scanning in future to support deploy ALL
