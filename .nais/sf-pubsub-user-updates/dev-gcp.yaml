@@ -5,7 +5,7 @@ metadata:
 spec:
   envFrom:
     - configmap: salesforce-common
-    - secret: sf-pubsub-preprod
+    - secret: sf-pubsub-sit2
   env:
     - name: WHITELIST_FILE
       value: "/whitelist/user-updates/dev.json"
