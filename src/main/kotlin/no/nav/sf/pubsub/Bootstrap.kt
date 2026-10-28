@@ -19,6 +19,7 @@ val application: Application =
         when (env(config_DEPLOY_APP)) {
             "sf-pubsub-employer-activity" -> Application(randomUUIDKafkaRecordHandler)
             "sf-pubsub-user-updates" -> Application(randomUUIDKafkaRecordHandler)
+            "sf-pubsub-worktrail-updates" -> Application(randomUUIDKafkaRecordHandler)
             "sf-pubsub-application-event" -> Application(teamLogsRecordHandler(EventTypeTeamLog.ApplicationEvent))
             "sf-pubsub-concur" -> Application(appendToPodFileHandler)
             "sf-pubsub-etask" -> {
