@@ -65,7 +65,6 @@ spec:
       access: readwrite
   envFrom:
     - configmap: salesforce-common
-    - secret: migration-prod
     - secret: sf-pubsub-prod
   env:
     - name: SF_TOKENHOST
