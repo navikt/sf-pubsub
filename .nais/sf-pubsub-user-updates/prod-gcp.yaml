@@ -3,6 +3,9 @@ metadata:
   labels:
     team: jobbsporet
 spec:
+ envFrom:
+    - configmap: salesforce-common
+    - secret: sf-pubsub-prod
   env:
     - name: WHITELIST_FILE
       value: "/whitelist/user-updates/prod.json"
