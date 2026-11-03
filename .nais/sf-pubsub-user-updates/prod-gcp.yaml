@@ -3,8 +3,6 @@ metadata:
   labels:
     team: jobbsporet
 spec:
- ingresses:
-    - "https://sf-pubsub-user-updates.intern.nav.no"
   env:
     - name: WHITELIST_FILE
       value: "/whitelist/user-updates/prod.json"
