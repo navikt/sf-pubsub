@@ -50,7 +50,11 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
     // =========================================================
     // UPDATE handling → invalidate cache if isPushed == true
     // =========================================================
-    if (changeType == "UPDATE" && json.get("IsPushed")?.asBoolean == true) {
+    if (changeType == "UPDATE" && json.get("IsPushed")?.isJsonNull == true) {
+        File("/tmp/files/latestNullIsPushedRecord").writeText(currentTimeTag + "\n" + json.toString())
+    }
+
+    if (changeType == "UPDATE" && json.get("IsPushed")?.takeUnless { it.isJsonNull }?.asBoolean == true) {
         val requestId = puzzelRequestCache.remove(recordId)
 
         if (requestId != null) {
