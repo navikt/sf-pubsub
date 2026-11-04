@@ -1,5 +1,7 @@
 # sf-pubsub [<img align="right" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="18" alt="GitHub repository" />](https://github.com/navikt/sf-pubsub)
 
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-2ea043?logo=grafana&logoColor=white)
+
 Integrasjonsapp for å speile data fra Salesforce Platform Events og Change Data Capture Events til systemer som Kafka, Prometheus, Kibana osv. via Pub/Sub API.
 
 Eksempel på oppsett for å lytte til Salesforce Topic og publisere på Aiven Kafka:
