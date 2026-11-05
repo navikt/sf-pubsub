@@ -17,18 +17,42 @@ val application: Application =
         Application(localRecordHandler) // For local testing
     } else {
         when (env(config_DEPLOY_APP)) {
-            "sf-pubsub-employer-activity" -> Application(randomUUIDKafkaRecordHandler)
-            "sf-pubsub-user-updates" -> Application(randomUUIDKafkaRecordHandler)
-            "sf-pubsub-worktrail-updates" -> Application(randomUUIDKafkaRecordHandler)
-            "sf-pubsub-application-event" -> Application(teamLogsRecordHandler(EventTypeTeamLog.ApplicationEvent))
-            "sf-pubsub-concur" -> Application(appendToPodFileHandler)
+            "sf-pubsub-employer-activity" -> {
+                Application(randomUUIDKafkaRecordHandler)
+            }
+
+            "sf-pubsub-user-updates" -> {
+                Application(randomUUIDKafkaRecordHandler)
+            }
+
+            "sf-pubsub-worktrail-updates" -> {
+                Application(randomUUIDKafkaRecordHandler)
+            }
+
+            "sf-pubsub-application-event" -> {
+                Application(teamLogsRecordHandler(EventTypeTeamLog.ApplicationEvent))
+            }
+
+            "sf-pubsub-concur" -> {
+                Application(appendToPodFileHandler)
+            }
+
             "sf-pubsub-etask" -> {
                 puzzelMappingCache.refreshCache()
                 Application(puzzelPSRRecordHandler)
             }
-            "sf-pubsub-payment-claim" -> Application(setUUIDFromPayloadFieldKafkaRecordHandler(EXTERNAL_ID_FIELD))
-            "sf-pubsub-new-resource" -> Application(randomUUIDKafkaRecordHandler)
-            else -> throw RuntimeException("Attempted to deploy unknown app,  make sure it is declared in Bootstrap.kt")
+
+            "sf-pubsub-payment-claim" -> {
+                Application(setUUIDFromPayloadFieldKafkaRecordHandler(EXTERNAL_ID_FIELD))
+            }
+
+            "sf-pubsub-new-resource" -> {
+                Application(randomUUIDKafkaRecordHandler)
+            }
+
+            else -> {
+                throw RuntimeException("Attempted to deploy unknown app,  make sure it is declared in Bootstrap.kt")
+            }
             // changeDataCaptureKafkaRecordHandler <- example of CDC handler
         }
     }

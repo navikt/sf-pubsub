@@ -94,10 +94,14 @@ class PuzzelClient(
                             log.error(e) { "Puzzel response parsing exception: ${response.bodyString()}" }
                         }
                         return
-                    } // 2xx -> done
+                    }
+
+                    // 2xx -> done
                     response.status.code in listOf(429, 503) -> {
                         log.warn { "Attempt retry on safe retryable status ${response.status}" }
-                    } else -> {
+                    }
+
+                    else -> {
                         // 4xx or unknown -> do NOT retry
                         throw RuntimeException("Failed to send eTask, response: ${response.status} ${response.bodyString()}")
                     }
