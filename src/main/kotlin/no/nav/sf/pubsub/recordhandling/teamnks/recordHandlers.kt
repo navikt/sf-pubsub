@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package no.nav.sf.pubsub.recordhandling.teamnks
 
 import mu.KotlinLogging
@@ -145,7 +147,7 @@ val puzzelPSRRecordHandler: (GenericRecord) -> Boolean = puzzelPSRRecordHandler@
 
         log.info {
             "Created ETask for recordId=$recordId " +
-                    "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $useClientForHjelpemidlerCentralen"
+                "queueId=$queueId queueKey=${eTask.queueKey}, hjelpemidler: $useClientForHjelpemidlerCentralen"
         }
 
         if (useClientForHjelpemidlerCentralen) {
