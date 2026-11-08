@@ -20,6 +20,16 @@ jar {
 shadowJar {
     archiveBaseName = 'app'
     archiveClassifier = ''
+
+    filesMatching('META-INF/services/**') {
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
+    }
+    mergeServiceFiles()
+}
+
+shadowJar {
+    archiveBaseName = 'app'
+    archiveClassifier = ''
     mergeServiceFiles()
 }
 
