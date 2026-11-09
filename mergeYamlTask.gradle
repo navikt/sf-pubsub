@@ -64,12 +64,12 @@ ext {
         return result
     }
 
-    copyYaml = { String app, String env ->
-        def targetDir = file("./.nais/${app}/target")
+    copyYaml = { String namespace, String app, String env ->
+        def targetDir = file("./.nais/${namespace}/${app}/target")
         targetDir.mkdirs()
 
-        def sourceFile = file("./.nais/${app}/${env}.yaml")
-        def destinationFile = file("./.nais/${app}/target/${env}.yaml")
+        def sourceFile = file("./.nais/${namespace}/${app}/${env}.yaml")
+        def destinationFile = file("./.nais/${namespace}/${app}/target/${env}.yaml")
 
         if (sourceFile.exists()) {
             copy { from sourceFile into targetDir }
@@ -88,10 +88,7 @@ tasks.register('mergeYamlTask') {
             def defaultFile = file("./.nais/default/${env}.yaml")
 
             if (!defaultFile.exists()) {
-                println "Default YAML file for ${env} does not exist."
-                return
-            } else {
-                // println "using file ./.nais/default/${env}.yaml"
+                throw new GradleException("Default YAML file for ${env} does not exist.")
             }
 
             // Load YAML files
@@ -108,37 +105,36 @@ tasks.register('mergeYamlTask') {
             Constructor constructor = new Constructor(loaderOptions)
             Yaml yaml = new Yaml(constructor, representer, dumperOptions, loaderOptions)
 
-            // Map defaultData = yaml.load(defaultFile.text)
+            file('./.nais').eachDir { namespaceDir ->
+                if (namespaceDir.name != 'default') {
+                    namespaceDir.eachDir { appDir ->
+                        def specificFile = new File(appDir, "${env}.yaml")
+                        if (appDir.name != 'target' && specificFile.exists()) {
+                            Map defaultData = yaml.load(defaultFile.text)
+                            Map specificData = yaml.load(specificFile.text)
 
-            // Iterate over all directories in ./.nais excluding the default directory
-            file('./.nais').eachDir { appDir ->
-                if (appDir.name != 'default') {
-                    def specificFile = new File(appDir, "${env}.yaml")
-                    if (specificFile.exists()) {
-                        Map defaultData = yaml.load(defaultFile.text)
+                            if ((specificData.metadata?.namespace != null &&
+                                    specificData.metadata.namespace != namespaceDir.name) ||
+                                    (specificData.metadata?.labels?.team != null &&
+                                    specificData.metadata.labels.team != namespaceDir.name)) {
+                                throw new GradleException("Namespace and team in ${specificFile} must match folder ${namespaceDir.name}.")
+                            }
 
-                        // println "merging with ${appDir} ${env}.yaml"
-                        Map specificData = yaml.load(specificFile.text)
+                            Map mergedData = mergeYaml(defaultData, specificData)
+                            mergedData.metadata.namespace = namespaceDir.name
+                            mergedData.metadata.labels.team = namespaceDir.name
 
-                        // Merge specificData into defaultData
-                        Map mergedData = mergeYaml(defaultData, specificData)
-
-                        // Ensure the target directory exists
-                        def targetDir = new File(appDir, 'target')
-                        if (!targetDir.exists()) {
+                            def targetDir = new File(appDir, 'target')
                             targetDir.mkdirs()
+
+                            def mergedFile = new File(targetDir, "${env}.yaml")
+                            String mergedContent = yaml.dump(mergedData)
+
+                            mergedContent = mergedContent.replace("replace-with-namespace", namespaceDir.name)
+                            mergedFile.write(mergedContent)
+
+                            println "Merged content for ${env} written to ${mergedFile}"
                         }
-
-                        // Write the merged data to target/dev-fss.yaml
-                        def mergedFile = new File(targetDir, "${env}.yaml")
-                        String mergedContent = yaml.dump(mergedData)
-
-                        mergedContent = mergedContent.replace("replace-with-namespace", appDir.name)
-                        mergedFile.write(mergedContent)
-
-                        println "Merged content for ${env} written to ${mergedFile}"
-                    } else {
-                        // println "Specific YAML file for ${env} does not exist in ${appDir}"
                     }
                 }
             }

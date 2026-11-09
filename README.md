@@ -21,7 +21,7 @@ Eksempel på oppsett for å lytte til Salesforce Topic og publisere på Aiven Ka
    kubectl apply -f <topic-yaml-fil> --context <dev-gcp/prod-gcp> -n <namespace>
     ```
 
-4. Opprett en mappe under [.nais/](https://github.com/navikt/sf-pubsub/tree/main/.nais) med navnet til appen som lytter på Salesforce Topic. Navnekonvensjonen er prefikset sf-pubsub- etterfulgt av entitetsnavnet, f.eks. sf-pubsub-task. Legg inn dev-gcp.yaml og prod-gcp.yaml med nais-konfigurasjon for hvert miljø. Grunnkonfigurasjonen finnes i default-mappen, så du trenger kun konfigurasjon spesifikt for din app. Eksempel:
+4. Opprett `.nais/<namespace>/<app>/` for appen som lytter på Salesforce Topic, for eksempel `.nais/platforce/sf-pubsub-application-event/` eller `.nais/teamnks/sf-pubsub-etask/`. Appnavnet har prefikset `sf-pubsub-` etterfulgt av entitetsnavnet. Legg inn `dev-gcp.yaml` og `prod-gcp.yaml` med konfigurasjon for hvert miljø. `mergeYamlTask` merger filene med `.nais/default/<miljø>.yaml` og skriver resultatet til `.nais/<namespace>/<app>/target/<miljø>.yaml`. Namespace-mappen bestemmer `metadata.namespace` og `metadata.labels.team`. Hvis appfilen angir disse feltene, må de samsvare med mappen. Du trenger bare konfigurasjon som er spesifikk for appen. Eksempel:
 
  ```yaml
 spec:
@@ -43,7 +43,7 @@ skal kun bestå av objekter og streng-primitive verdier. Angi feltene du vil ink
    - `ALL` for å inkludere hele feltet (enkeltverdi, objekt eller array)
    - `DATE_FROM_MILLIS` hvis du forventer en dato som kommer i Millis-format (long), for konvertering til ISO UTC
 
-7. Oppdater .github/workflows/main.yml med appen du vil deploye og hvilket cluster den skal deployes til. [main.yml](https://github.com/navikt/sf-pubsub/blob/main/.github/workflows/main.yml) styrer hva som deployes og til hvilket cluster, uavhengig av hvilken branch du er i.
+7. Sett `DEPLOY_APP`, `DEPLOY_CLUSTER` og `DEPLOY_NAMESPACE` i [main.yml](https://github.com/navikt/sf-pubsub/blob/main/.github/workflows/main.yml). Workflowen bruker konfigurasjonen i `.nais/<DEPLOY_NAMESPACE>/<DEPLOY_APP>/`. Sett `DEPLOY_APP: ALL` for å deploye alle appene med konfigurasjon for valgt cluster i det valgte namespacet. `main.yml` styrer hva som deployes og til hvilket cluster, uavhengig av hvilken branch du er i.
 
 <details markdown="1">
 <summary><strong>Flyt</strong></summary>

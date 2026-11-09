@@ -66,7 +66,7 @@ object Valkey {
     fun storeReplayId(replayId: ByteString) {
         val replayIdString = replayId.toByteArray().let { Base64.getEncoder().encodeToString(it) }
         commands.set(env(env_NAIS_APP_NAME), replayIdString, SetArgs().ex(259200)) // Expire after 72h
-        log.info { "Stored replay ID in Valkey for app: ${env(env_NAIS_APP_NAME)}" }
+        log.debug { "Stored replay ID in Valkey for app: ${env(env_NAIS_APP_NAME)}" }
     }
 
     fun fetchReplayId(): ByteString? {
