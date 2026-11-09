@@ -3,7 +3,6 @@ spec:
     - "https://sf-pubsub-application-event.intern.dev.nav.no"
   envFrom:
     - configmap: salesforce-common
-    - secret: migration-preprod
     - secret: sf-pubsub-preprod
   env:
     - name: SALESFORCE_TOPIC

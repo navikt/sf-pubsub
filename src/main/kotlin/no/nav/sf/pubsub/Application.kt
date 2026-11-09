@@ -93,10 +93,17 @@ class Application(
         initTmpFilesFolder()
         apiServer(8080).start()
 
+        val replayId =
+            if (useValkey) {
+                Valkey.latch.await()
+                Valkey.fetchReplayId()
+            } else {
+                null
+            }
+
         val replayPreset =
             if (useValkey) {
-                Valkey.latch.await() // Wait for valkey initialization to be done, and possibly replayId fetched from store
-                if (Valkey.lastReplayId == null) {
+                if (replayId == null) {
                     log.info { "Valkey in use, no replay ID found, will read LATEST" }
                     ReplayPreset.LATEST
                 } else {
@@ -112,7 +119,7 @@ class Application(
             PubSubClient(
                 salesforceTopic = salesforceTopic,
                 initialReplayPreset = replayPreset,
-                initialReplayId = if (replayPreset == ReplayPreset.CUSTOM) Valkey.lastReplayId else null,
+                initialReplayId = replayId,
                 recordHandler = recordHandler,
             )
 

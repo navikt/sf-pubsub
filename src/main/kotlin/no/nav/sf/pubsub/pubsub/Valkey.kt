@@ -23,8 +23,6 @@ object Valkey {
 
     val latch = CountDownLatch(1) // Concurrent mechanism for main thread to wait on
 
-    var lastReplayId: ByteString? = null
-
     var initialCheckPassed = false
 
     fun isReady(): Boolean =

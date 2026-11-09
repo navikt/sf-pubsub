@@ -21,15 +21,9 @@ shadowJar {
     archiveBaseName = 'app'
     archiveClassifier = ''
 
-    filesMatching('META-INF/services/**') {
+    filesMatching(['META-INF/services/**', 'META-INF/*.kotlin_module']) {
         duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.INCLUDE
     }
-    mergeServiceFiles()
-}
-
-shadowJar {
-    archiveBaseName = 'app'
-    archiveClassifier = ''
     mergeServiceFiles()
 }
 
@@ -65,14 +59,10 @@ dependencies {
 
     implementation 'io.lettuce:lettuce-core:7.9.0.RELEASE'
 
-
     implementation "org.apache.kafka:kafka-clients:4.4.0"
-
-
 
     implementation "org.xerial.snappy:snappy-java:1.1.10.12" // Transitive dependency for org.apache.kafka:kafka-clients:4.4.0
     implementation "at.yawk.lz4:lz4-java:1.13.0" // Transitive dependency for org.apache.kafka:kafka-clients:4.3.0
-    //implementation "at.yawk.lz4:lz4-java:1.11.1" // Transitive to kafka-clients:4.1.2
 
     // Avro core library
     implementation 'org.apache.avro:avro:1.12.2'
