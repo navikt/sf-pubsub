@@ -10,6 +10,7 @@ import no.nav.sf.pubsub.recordhandling.common.teamLogsRecordHandler
 import no.nav.sf.pubsub.recordhandling.teamnks.puzzelPSRRecordHandler
 
 private const val EXTERNAL_ID_FIELD = "External_Id__c"
+private const val JOBBSPOR_ID_FIELD = "JobbsporId__c"
 
 val application: Application =
     if (isLocal) {
@@ -26,7 +27,7 @@ val application: Application =
             }
 
             "sf-pubsub-worktrail-updates" -> {
-                Application(randomUUIDKafkaRecordHandler)
+                Application(setUUIDFromPayloadFieldKafkaRecordHandler(JOBBSPOR_ID_FIELD))
             }
 
             "sf-pubsub-application-event" -> {
